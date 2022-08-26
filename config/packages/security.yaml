@@ -18,6 +18,11 @@ security:
             lazy: true
             provider: app_user_provider
 
+            form_login:
+                # "app_login" is the name of the route created previously
+                login_path: app_login
+                check_path: app_login
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -33,6 +38,8 @@ security:
 when@test:
     security:
         password_hashers:
+            # auto hasher with default options for the User class (and children)
+            App\Entity\User: 'auto'
             # By default, password hashers are resource intensive and take time. This is
             # important to generate secure password hashes. In tests however, secure hashes
             # are not important, waste resources and increase test times. The following
