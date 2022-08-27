@@ -14,7 +14,7 @@ class SecurityController extends AbstractController
         $this->authenticationUtils  = $authenticationUtils ; 
     }
 
-    #[Route('/login', name: 'login')]
+    #[Route('/login', name: 'app_login')]
     public function loginAction(): Response
     {
 
