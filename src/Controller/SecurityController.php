@@ -37,5 +37,8 @@ class SecurityController extends AbstractController
     public function logoutCheck()
     {
         // This code is never executed.
+        
+        // controller can be blank: it will never be called!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
 }
