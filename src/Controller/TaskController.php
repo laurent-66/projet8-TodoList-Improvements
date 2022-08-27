@@ -35,6 +35,7 @@ class TaskController extends AbstractController
     public function createAction(Request $request)
     {
         $task = new Task();
+        $currentUser = $this->getUser();
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -43,6 +44,7 @@ class TaskController extends AbstractController
 
             $task->setIsDone(false);
             $task->setCreatedAt(new \DateTime());
+            $task->setUser($currentUser);
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
