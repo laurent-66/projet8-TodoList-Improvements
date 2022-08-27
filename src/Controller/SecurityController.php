@@ -36,10 +36,8 @@ class SecurityController extends AbstractController
     #[Route("/logout", name:"logout")]
     public function logoutCheck()
     {
-        // This code is never executed.
-        
+
         // controller can be blank: it will never be called!
-        return $this->render('default/index.html.twig');
 
     }
 }
