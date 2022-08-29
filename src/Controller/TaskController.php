@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
-use DateTime;
+use App\Services\FilterStatusTasks;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,17 +22,26 @@ class TaskController extends AbstractController
         $this->taskRepository = $taskRepository;
     }
 
-    #[Route('/tasks', name: 'task_list')]
+    #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
-        $currentUser = $this->getUser();
-
-        $tasks = $this->taskRepository->findByUser($currentUser);
-
+        $tasks = $this->taskRepository->findByUser($this->getUser());
+        $tasksTodo = FilterStatusTasks::filter($tasks,false);
         return $this->render('task/list.html.twig', [
-            'tasks' => $tasks
+            'tasks' => $tasksTodo
         ]);
     }
+
+    #[Route('/tasks/completed', name: 'task_completed')]
+    public function listTaskCompletedAction(): Response
+    {
+        $tasks = $this->taskRepository->findByUser($this->getUser());
+        $tasksCompleted = FilterStatusTasks::filter($tasks,true);
+        return $this->render('task/listTaskCompleted.html.twig', [
+            'tasks' => $tasksCompleted
+        ]);
+    }
+
 
     #[Route("/tasks/create", name:"task_create")]
     public function createAction(Request $request)
@@ -94,7 +104,7 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('to-do_list');
     }
 
 
