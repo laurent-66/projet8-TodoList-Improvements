@@ -38,7 +38,6 @@ public function __construct(UserRepository $userRepository, EntityManagerInterfa
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user = $form->getData();
-
             $plaintextPassword = $user->getPassword();
             $role = $user->getRoleSelection();
             $hashedPassword = $this->passwordHasher->hashPassword($user,$plaintextPassword);
@@ -60,6 +59,9 @@ public function __construct(UserRepository $userRepository, EntityManagerInterfa
     {
 
         $user = $this->userRepository->find($id);
+        $currentRole = $user->getRoles();
+        $user->setRoleSelection($currentRole[0]);
+
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
@@ -67,11 +69,12 @@ public function __construct(UserRepository $userRepository, EntityManagerInterfa
         if ($form->isSubmitted() && $form->isValid()) {
             
             $plaintextPassword = $user->getPassword();
+            $role = $user->getRoleSelection();
             $hashedPassword = $this->passwordHasher->hashPassword($user,$plaintextPassword);
             $user->setPassword($hashedPassword);
+            $user->setRoles([$role]);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
             return $this->redirectToRoute('user_list');
