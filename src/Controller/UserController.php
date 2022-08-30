@@ -31,20 +31,21 @@ public function __construct(UserRepository $userRepository, EntityManagerInterfa
     #[Route("/users/create", name:"user_create")]
     public function createAction(Request $request)
     {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $user = $form->getData();
+
             $plaintextPassword = $user->getPassword();
+            $role = $user->getRoleSelection();
             $hashedPassword = $this->passwordHasher->hashPassword($user,$plaintextPassword);
             $user->setPassword($hashedPassword);
-
+            $user->setRoles([$role]);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
             return $this->redirectToRoute('user_list');

@@ -39,6 +39,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
+    private string $roleSelection;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class, orphanRemoval: true)]
     private Collection $tasks;
 
@@ -108,6 +110,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function getRoleSelection():string
+    {
+        return $this->roleSelection;
+    }
+
+
+    public function setRoleSelection($roleSelection):void
+    {
+        $this->roleSelection = $roleSelection;
+    }
+
 
     /**
      * @see PasswordAuthenticatedUserInterface
