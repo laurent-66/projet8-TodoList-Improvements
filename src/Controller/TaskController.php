@@ -25,11 +25,20 @@ class TaskController extends AbstractController
     #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
-        $tasks = $this->taskRepository->findByUser($this->getUser());
-        $tasksTodo = FilterStatusTasks::filter($tasks,false);
-        return $this->render('task/list.html.twig', [
-            'tasks' => $tasksTodo
-        ]);
+        if($this->getUser()){
+            $tasks = $this->taskRepository->findByUser($this->getUser());
+            $tasksTodo = FilterStatusTasks::filter($tasks,false);
+            return $this->render('task/list.html.twig', [
+                'tasks' => $tasksTodo
+            ]);
+        } else {
+            $tasksPublic = $this->taskRepository->findByUser(!$this->getUser());
+            $tasksPublicTodo = FilterStatusTasks::filter($tasksPublic,false);
+            return $this->render('task/public-list.html.twig', [
+                'tasks' => $tasksPublicTodo
+            ]);
+        }
+
     }
 
     #[Route('/tasks/completed', name: 'task_completed')]
