@@ -62,9 +62,6 @@ class TaskController extends AbstractController
                 'tasks' => $tasksPublicIsDone
             ]);
         }
-
-
-
     }
 
 

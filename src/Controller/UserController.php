@@ -7,6 +7,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,18 +15,28 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
-public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
+public function __construct(
+    UserRepository $userRepository,
+    EntityManagerInterface $entityManager, 
+    UserPasswordHasherInterface $passwordHasher,
+    Security $security
+    )
 {
     $this->userRepository = $userRepository;
     $this->entityManager = $entityManager;
     $this->passwordHasher = $passwordHasher;
+    $this->security = $security;
 }
 
-    #[Route('/users', name: 'user_list')]
+    #[Route('/admin/users', name: 'users_list')]
     public function index(): Response
     {
+        // if ($this->security->isGranted('ROLE_ADMIN')) {
         return $this->render('user/list.html.twig', [
             'users' => $this->userRepository->findAll()]);
+        // } else {
+        //     return $this->redirectToRoute('homepage');
+        // }   
     }
 
     #[Route("/users/create", name:"user_create")]
