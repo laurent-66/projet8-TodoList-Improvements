@@ -24,6 +24,29 @@ class TaskController extends AbstractController
         $this->userRepository = $userRepository;
     }
 
+
+    #[Route('/admin/tasks', name: 'tasksUsersAnonymous')]
+    public function listTasksUserAnonymous()
+    {
+        $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+        $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
+        return $this->render('task/list.html.twig', [
+            'tasks' => $tasksPublic
+        ]);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
