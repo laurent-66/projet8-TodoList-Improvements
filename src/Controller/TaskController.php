@@ -36,17 +36,6 @@ class TaskController extends AbstractController
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
     #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
