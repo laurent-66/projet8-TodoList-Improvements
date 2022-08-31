@@ -47,11 +47,24 @@ class TaskController extends AbstractController
     #[Route('/tasks/completed', name: 'task_completed')]
     public function listTaskCompletedAction(): Response
     {
-        $tasks = $this->taskRepository->findByUser($this->getUser());
-        $tasksCompleted = FilterStatusTasks::filter($tasks,true);
-        return $this->render('task/listTaskCompleted.html.twig', [
-            'tasks' => $tasksCompleted
-        ]);
+        if($this->getUser()){
+            $tasks = $this->taskRepository->findByUser($this->getUser());
+            $tasksCompleted = FilterStatusTasks::filter($tasks,true);
+            return $this->render('task/listTaskCompleted.html.twig', [
+                'tasks' => $tasksCompleted
+            ]);
+
+        } else {
+            $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+            $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
+            $tasksPublicIsDone = FilterStatusTasks::filter($tasksPublic,true);
+            return $this->render('task/listTaskCompleted.html.twig', [
+                'tasks' => $tasksPublicIsDone
+            ]);
+        }
+
+
+
     }
 
 
