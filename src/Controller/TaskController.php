@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use App\Services\FilterStatusTasks;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,30 +17,54 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository)
+    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository, UserRepository $userRepository)
     {
         $this->entityManager = $entityManager;
         $this->taskRepository = $taskRepository;
+        $this->userRepository = $userRepository;
     }
 
     #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
-        $tasks = $this->taskRepository->findByUser($this->getUser());
-        $tasksTodo = FilterStatusTasks::filter($tasks,false);
-        return $this->render('task/list.html.twig', [
-            'tasks' => $tasksTodo
-        ]);
+        if($this->getUser()){
+            $tasks = $this->taskRepository->findByUser($this->getUser());
+            $tasksTodo = FilterStatusTasks::filter($tasks,false);
+            return $this->render('task/list.html.twig', [
+                'tasks' => $tasksTodo
+            ]);
+        } else {
+            $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+            $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
+            $tasksPublicTodo = FilterStatusTasks::filter($tasksPublic,false);
+            return $this->render('task/list.html.twig', [
+                'tasks' => $tasksPublicTodo
+            ]);
+        }
+
     }
 
     #[Route('/tasks/completed', name: 'task_completed')]
     public function listTaskCompletedAction(): Response
     {
-        $tasks = $this->taskRepository->findByUser($this->getUser());
-        $tasksCompleted = FilterStatusTasks::filter($tasks,true);
-        return $this->render('task/listTaskCompleted.html.twig', [
-            'tasks' => $tasksCompleted
-        ]);
+        if($this->getUser()){
+            $tasks = $this->taskRepository->findByUser($this->getUser());
+            $tasksCompleted = FilterStatusTasks::filter($tasks,true);
+            return $this->render('task/listTaskCompleted.html.twig', [
+                'tasks' => $tasksCompleted
+            ]);
+
+        } else {
+            $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+            $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
+            $tasksPublicIsDone = FilterStatusTasks::filter($tasksPublic,true);
+            return $this->render('task/listTaskCompleted.html.twig', [
+                'tasks' => $tasksPublicIsDone
+            ]);
+        }
+
+
+
     }
 
 
