@@ -11,6 +11,7 @@
         <a href="{{ path('task_completed') }}" class="btn btn-secondary">Consulter la liste des tâches terminées</a>
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('users_list') }}" class="btn btn-primary">Gestion des utilisateurs</a>
+            <a href="{{ path('tasksUsersAnonymous') }}" class="btn btn-primary">Gestion des tâches</a>
         {% endif %}
     </div>
 {% endblock %}

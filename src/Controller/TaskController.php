@@ -24,6 +24,18 @@ class TaskController extends AbstractController
         $this->userRepository = $userRepository;
     }
 
+
+    #[Route('/admin/tasks', name: 'tasksUsersAnonymous')]
+    public function listTasksUserAnonymous()
+    {
+        $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+        $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
+        return $this->render('task/adminTasksAnonymous.html.twig', [
+            'tasks' => $tasksPublic
+        ]);
+
+    }
+
     #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
@@ -138,7 +150,7 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('to-do_list');
+        return $this->redirectToRoute('tasksUsersAnonymous');
     }
 
 }

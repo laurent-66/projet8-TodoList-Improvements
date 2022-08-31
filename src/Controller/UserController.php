@@ -31,12 +31,8 @@ public function __construct(
     #[Route('/admin/users', name: 'users_list')]
     public function index(): Response
     {
-        // if ($this->security->isGranted('ROLE_ADMIN')) {
         return $this->render('user/list.html.twig', [
             'users' => $this->userRepository->findAll()]);
-        // } else {
-        //     return $this->redirectToRoute('homepage');
-        // }   
     }
 
     #[Route("/users/create", name:"user_create")]
