@@ -2,7 +2,7 @@
 
 {% block header_img %}{% endblock %}
 
-{% block header_title %}<h1>Liste des utilisateurs</h1>{% endblock %}
+{% block header_title %}<h1>Liste des tâches associées à un utilisateur anonyme</h1>{% endblock %}
 
 {% block body %}
         <div class="row">
@@ -11,23 +11,22 @@
                 <tr>
                     <th>#</th>
                     <th>Nom de la tâche</th>
-                    <th>Adresse d'utilisateur</th>
+                    <th>Contenue de la tâche</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in users %}
+                {% for task in tasks %}
                     <tr>
                         <th scope="row">{{ loop.index }}</th>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.content }}</td>
                         <td>
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
+                            <a href="{{ path('task_delete', {'id' : task.id}) }}" class="btn btn-danger btn-sm">supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
-    {% endif %}
 {% endblock %}
