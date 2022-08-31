@@ -26,10 +26,16 @@
                             {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
                         </button>
                     </form>
+
+                {# masquer cette partie si utlisateur non connecté #}
+                {% if app.user %}
                     <a href="{{path('task_edit', {'id' : task.id })}}" class="btn btn-info pull-right">Modifier la tâche</a>
                     <form action="{{ path('task_delete', {'id' : task.id }) }}">
                         <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
                     </form>
+                {% endif %}
+                
+                {# ///// #}
                 </div>
             </div>
         </div>

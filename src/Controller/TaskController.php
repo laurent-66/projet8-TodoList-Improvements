@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use App\Services\FilterStatusTasks;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository)
+    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository, UserRepository $userRepository)
     {
         $this->entityManager = $entityManager;
         $this->taskRepository = $taskRepository;
+        $this->userRepository = $userRepository;
     }
 
     #[Route('/tasks/to_do', name: 'to-do_list')]
@@ -32,9 +34,10 @@ class TaskController extends AbstractController
                 'tasks' => $tasksTodo
             ]);
         } else {
-            $tasksPublic = $this->taskRepository->findByUser(!$this->getUser());
+            $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+            $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
             $tasksPublicTodo = FilterStatusTasks::filter($tasksPublic,false);
-            return $this->render('task/public-list.html.twig', [
+            return $this->render('task/list.html.twig', [
                 'tasks' => $tasksPublicTodo
             ]);
         }
