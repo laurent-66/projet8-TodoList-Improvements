@@ -153,12 +153,18 @@ class TaskController extends AbstractController
     }
 
     #[Route("/tasks/{id}/delete", name:"task_delete")]
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskToDoAction(Task $task)
     {
-        $this->entityManager->remove($task);
-        $this->entityManager->flush();
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
-        return $this->redirectToRoute('to-do_list');
+        if(!$task->isIsDone()) {
+            $this->entityManager->remove($task);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+            return $this->redirectToRoute('to-do_list');
+        }else{
+            $this->entityManager->remove($task);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+            return $this->redirectToRoute('task_completed');
+        }
     }
-
 }
