@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use App\Services\FilterStatusTasks;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,11 +18,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository, UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository, UserRepository $userRepository, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->taskRepository = $taskRepository;
         $this->userRepository = $userRepository;
+        $this->security = $security;
     }
 
 
@@ -96,7 +98,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('to-do_list');
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -150,7 +152,8 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('tasksUsersAnonymous');
+        return $this->redirectToRoute('to-do_list');
+
     }
 
 }
