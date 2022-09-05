@@ -22,7 +22,7 @@
                         <td>{{ task.title }}</td>
                         <td>{{ task.content }}</td>
                         <td>
-                            <a href="{{ path('task_delete', {'id' : task.id}) }}" class="btn btn-danger btn-sm">supprimer</a>
+                            <a href="{{ path('task_anonymous_delete', {'id' : task.id}) }}" class="btn btn-danger btn-sm">supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}
