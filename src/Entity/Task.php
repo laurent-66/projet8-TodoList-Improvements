@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TaskRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[UniqueEntity("title", message:"Ce titre est déjà utilisé")]
 class Task
 {
     #[ORM\Id]
