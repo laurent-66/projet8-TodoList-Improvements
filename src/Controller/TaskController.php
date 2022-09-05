@@ -143,17 +143,22 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('to-do_list');
     }
 
+    #[Route("/admin/tasks/{id}/delete", name:"task_anonymous_delete")]
+    public function deleteTaskAnonymousAction(Task $task)
+    {
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        return $this->redirectToRoute('tasksUsersAnonymous');
+    }
 
     #[Route("/tasks/{id}/delete", name:"task_delete")]
     public function deleteTaskAction(Task $task)
     {
         $this->entityManager->remove($task);
         $this->entityManager->flush();
-
         $this->addFlash('success', 'La tâche a bien été supprimée.');
-
         return $this->redirectToRoute('to-do_list');
-
     }
 
 }
