@@ -4,41 +4,52 @@
 
 {% block body %}
     <div class="row">
-        <a href="{{ path('to-do_list') }}" class="btn btn-info pull-right">Afficher tâches à faire</a>  
-    {% if app.user %}      
-        <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
-    {% endif %}      
+        <div class="col-sm-12 col-md-6">
+            {% if app.user %}      
+                <a href="{{ path('task_create') }}" class="btn btn-success d-block mb-3">Créer une tâche</a>
+            {% endif %}  
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <a href="{{ path('to-do_list') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches à faire</a>  
+        </div>
     </div>
-    <div class="row">
+    <div class="row px-0 mx-0">
         {% for task in tasks %}
-
-        <div class="cardTask col-sm-4 col-lg-4 col-md-4">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h4 class="pull-right">
-                        {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
-                    </h4>
-                    <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
-                    <p>{{ task.content }}</p>
-                </div>
-                <div>
-                    <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                        <button class="btn btn-success btn-sm pull-right">
-                            {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-                        </button>
-                    </form>
-                {% if app.user %}
-                    <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                        <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
-                    </form>
-                {% endif %}
+        <div class="col-sm-4 col-lg-4 col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <div class="d-flex justify-content-end">
+                                <div class="state-validation-task">
+                                    {% if task.isDone %}<img src="{{ asset('img/icons/check-solid-black.png') }}" alt="trash" width="20px" height="20px"/>{% else %}<img src="{{ asset('img/icons/xmark-solid-black.png') }}" alt="trash" width="20px" height="20px"/>{% endif %}
+                                </div>
+                            </div>
+                            <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+                            <p>{{ task.content }}</p>
+                        </div>
+                        <div class="row">
+                            <div class="d-flex justify-content-end flex-wrap mt-3">
+                                {% if app.user %}
+                                    <form action="{{ path('task_delete', {'id' : task.id }) }}">
+                                        <button class="btn btn-danger btn-sm"><img src="{{ asset('img/icons/trash-solid.png') }}" alt="trash" height="30px" title="Supprimer la tâche"/></button>
+                                    </form>
+                                {% endif %}   
+                                <form action="{{ path('task_toggle', {'id' : task.id }) }}">
+                                    <button class="btn btn-warning btn-sm ms-2">
+                                        {% if not task.isDone %}<img src="{{ asset('img/icons/check-solid.png') }}" alt="trash" height="30px"/>{% else %}<img src="{{ asset('img/icons/xmark-solid.png') }}" alt="trash" height="30px" title="Rendre la tâche comme non effectuée"/>{% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         {% else %}
-            <div class="alert alert-warning" role="alert">
-                Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+            <div class="alert alert-warning mt-4" role="alert">
+                Il n'y a pas encore de tâche enregistrée.
             </div>
         {% endfor %}
     </div>
