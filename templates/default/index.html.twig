@@ -6,37 +6,34 @@
 {% endblock %}
 
 {% block body %}
-
-
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-6 px-3">
-                    <a href="{{ path('user_create') }}" class="btn btn-primary my-2 mx-2 d-block mx-auto pr-2">Créer un utilisateur</a>
-                </div>            
-            </div>
-
-
-
-
-
     <div class="row mx-0">
-        <div class="col-sm-12 col-md-4 px-0">
-            <a href="{{ path('task_create') }}" class="btn btn-success my-2 mx-2 d-block mx-auto">Créer une nouvelle tâche</a>
+        <div class="col-sm-12 col-md-6">
+            <a href="{{ path('user_create') }}" class="btn btn-success my-2 d-block">Créer un utilisateur</a>
         </div>
-        <div class="col-sm-12 col-md-4 px-0">
-            <a href="{{ path('to-do_list') }}" class="btn btn-info my-2 mx-2 d-block px-3">Consulter la liste des tâches à faire</a>
-        </div>
-        <div class="col-sm-12 col-md-4 px-0">
-            <a href="{{ path('task_completed') }}" class="btn btn-secondary my-2 mx-2 d-block mx-auto">Consulter la liste des tâches terminées</a>
+        <div class="col-sm-12 col-md-6">
+            <a href="{{ path('task_create') }}" class="btn btn-success my-2  d-block">Créer une nouvelle tâche</a>
         </div>
     </div>
+
     <div class="row mx-0">
+        <div class="col-sm-12 col-md-6">
+            <a href="{{ path('to-do_list') }}" class="btn btn-info my-2 d-block">Consulter la liste des tâches à faire</a>
+        </div>
+        <div class="col-sm-12 col-md-6">
+           <a href="{{ path('task_completed') }}" class="btn btn-info my-2 d-block">Consulter la liste des tâches terminées</a>
+        </div>
+    </div>
+
         {% if is_granted('ROLE_ADMIN') %}
-            <div class="col-sm-12 col-md-6 px-0">
-                <a href="{{ path('users_list') }}" class="btn btn-primary my-2 mx-2 d-block mx-auto pr-2">Gestion des utilisateurs</a>
-            </div>
-            <div class="col-sm-12 col-md-6 px-0">
-                <a href="{{ path('tasksUsersAnonymous') }}" class="btn btn-primary my-2 mx-2 d-block mx-auto pl-2">Gestion des tâches</a>
-            </div>        
-        {% endif %}
+    <h3 class= "text-center mt-4">Administrateur</h3>
+    <div class="row mx-0">
+        <div class="col-sm-12 col-md-6">
+            <a href="{{ path('users_list') }}" class="btn btn-primary my-2 mx-2 d-block mx-auto pr-2">Gestion des utilisateurs</a>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <a href="{{ path('tasksUsersAnonymous') }}" class="btn btn-primary my-2 mx-2 d-block mx-auto pl-2">Gestion des tâches</a>
+        </div>        
     </div>
+        {% endif %}
+
 {% endblock %}

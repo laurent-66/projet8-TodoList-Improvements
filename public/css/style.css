@@ -1,4 +1,20 @@
-.cardTask
+.content-scrollable
 {
-    display: block;
-} 
+    height: 200px;
+    overflow: scroll;
+}
+.state-validation-task
+{
+    width: 20px;
+    height:20px;
+}
+
+.column-content-task .column-username
+{
+    display:none;
+}
+
+.column-username
+{
+    display:none;
+}

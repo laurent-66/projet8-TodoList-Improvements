@@ -2,7 +2,7 @@
 
 {% block header_img %}{% endblock %}
 
-{% block header_title %}<h1>Liste des tâches associées à un utilisateur anonyme</h1>{% endblock %}
+{% block header_title %}<h2 class="text-center">Liste des tâches associées à un utilisateur anonyme</h2>{% endblock %}
 
 {% block body %}
         <div class="row">
@@ -11,7 +11,7 @@
                 <tr>
                     <th>#</th>
                     <th>Nom de la tâche</th>
-                    <th>Contenue de la tâche</th>
+                    <th class="column-content-task">Contenue de la tâche</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -20,7 +20,7 @@
                     <tr>
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ task.title }}</td>
-                        <td>{{ task.content }}</td>
+                        <td class="column-content-task">{{ task.content }}</td>
                         <td>
                             <a href="{{ path('task_anonymous_delete', {'id' : task.id}) }}" class="btn btn-danger btn-sm">supprimer</a>
                         </td>

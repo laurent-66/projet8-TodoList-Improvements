@@ -5,13 +5,9 @@
     <div class="row">
         {{ form_start(form, {'action' : path('task_create')}) }}
             {{ form_widget(form) }}
-            <div class="row">
-                <div class="col-md-6">
-                    <button type="submit" class="btn btn-success d-block mx-auto mb-3">Ajouter</button>
-                </div>
-                <div class="col-md-6">
-                    <a href="{{ path('to-do_list') }}" class="btn btn-primary d-block mx-auto">Retour à la liste des tâches</a>
-                </div>
+            <div class="d-flex justify-content-start flex-wrap">
+                <button type="submit" class="btn btn-success d-block mb-3">Ajouter</button>
+                <a href="{{ path('to-do_list') }}"><div class="btn btn-primary d-block ms-2">Retour à la liste des tâches</div></a>
             </div>
         {{ form_end(form) }}
     </div>
