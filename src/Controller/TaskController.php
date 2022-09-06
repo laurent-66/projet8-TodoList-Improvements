@@ -82,22 +82,31 @@ class TaskController extends AbstractController
     #[Route("/tasks/create", name:"task_create")]
     public function createAction(Request $request)
     {
-        $task = new Task();
         $currentUser = $this->getUser();
-        $form = $this->createForm(TaskType::class, $task);
-
+        $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
+        $task = new Task();
+        $form = $this->createForm(TaskType::class);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $dataForm = $form->getData();
+            $title = $dataForm->getTitle();
+            $content = $dataForm->getContent();
+            $task->setTitle($title);
+            $task->setContent($content);
             $task->setIsDone(false);
             $task->setCreatedAt(new \DateTime());
-            $task->setUser($currentUser);
-            $this->entityManager->persist($task);
-            $this->entityManager->flush();
 
+            if($currentUser){
+                $task->setUser($currentUser);
+                $this->entityManager->persist($task);
+                $this->entityManager->flush();
+            } else {
+                $task->setUser($userAnonymous);
+                $this->entityManager->persist($task);
+                $this->entityManager->flush();
+            } 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
-
             return $this->redirectToRoute('to-do_list');
         }
 
