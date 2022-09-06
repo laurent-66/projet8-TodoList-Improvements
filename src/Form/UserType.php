@@ -22,18 +22,26 @@ class UserType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
-                'required'=>false
+                'required'=>false,
+                // 'attr' => ['class' => 'form-label']
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'required'=>false,
+                // 'attr' => ['class' => 'form-label']
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
                 'required' => false,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
+                'first_options'  => [
+                    'label' => 'Mot de passe',
+                    // 'attr' => ['class' => 'form-label']
+                ],
+                'second_options' => [
+                    'label' => 'Tapez le mot de passe à nouveau',
+                    // 'attr' => ['class' => 'form-label']
+                ],
             ])
             ->add('roleSelection', ChoiceType::class, [
                     'choices'  => [
