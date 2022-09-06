@@ -31,10 +31,10 @@
                 <a class="navbar-brand d-block mx-0 px-0" href="{{path('homepage')}}">To Do List app</a>
                 <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
                 {% if app.user %}
-                <a href="{{ path('logout') }}" class="btn btn-danger d-block">Se déconnecter</a>
+                <a href="{{ path('logout') }}" class="btn  btn-warning rounded-pill d-block" style="background-color: $red-400">Se déconnecter</a>
                 {% endif %}
                 {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                <a href="{{ path('app_login') }}" class="btn btn-success d-block">Se connecter</a>
+                <a href="{{ path('app_login') }}" class="btn btn-primary rounded-pill d-block">Se connecter</a>
                 {% endif %}
             </div>
         </nav>

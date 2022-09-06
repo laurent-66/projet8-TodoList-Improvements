@@ -9,12 +9,25 @@
     height:20px;
 }
 
-.column-content-task .column-username
+.column-content-task
 {
-    display:none;
+    display:block;
 }
 
 .column-username
 {
-    display:none;
+    display:block;
 }
+
+@media screen and (max-width: 767px) {
+
+    .column-content-task
+    {
+        display:none;
+    }
+    
+    .column-username
+    {
+        display:none;
+    }
+  }
