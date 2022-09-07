@@ -28,7 +28,7 @@
     <body>
         <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
             <div class="container d-flex justify-content-between navbar-header">
-                <a class="navbar-brand d-block mx-0 px-0" href="{{path('homepage')}}">To Do List app</a>
+                <a class="navbar-brand d-block mx-0 px-0" href="{{path('homepage')}}"><img src="{{ asset('img/logo-todolist.png') }}" alt="logo_to_list" style="height: 35px;"/></a>
                 <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
                 {% if app.user %}
                 <a href="{{ path('logout') }}" class="btn  btn-warning rounded-pill d-block" style="background-color: $red-400">Se déconnecter</a>

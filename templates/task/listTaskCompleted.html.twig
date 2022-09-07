@@ -13,6 +13,7 @@
             <a href="{{ path('to-do_list') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches à faire</a>  
         </div>
     </div>
+    <h2 class="text-center">Liste des tâches effectuées</h2>
     <div class="row px-0 mx-0">
         {% for task in tasks %}
         <div class="col-sm-4 col-lg-4 col-md-4">
@@ -25,8 +26,8 @@
                                     {% if task.isDone %}<img src="{{ asset('img/icons/check-solid-black.png') }}" alt="trash" width="20px" height="20px"/>{% else %}<img src="{{ asset('img/icons/xmark-solid-black.png') }}" alt="trash" width="20px" height="20px"/>{% endif %}
                                 </div>
                             </div>
-                            <h4>{{ task.title }}</h4>
-                            <p>{{ task.content }}</p>
+                            <h4 class="card-title">{{ task.title }}</h4>
+                            <p class="card-text content-scrollable">{{ task.content }}</p>
                         </div>
                         <div class="row">
                             <div class="d-flex justify-content-end flex-wrap mt-3">

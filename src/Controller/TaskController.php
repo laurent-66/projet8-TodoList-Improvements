@@ -138,19 +138,25 @@ class TaskController extends AbstractController
         ]);
     }
 
-
+/////// a revoir
     #[Route("/tasks/{id}/toggle", name:"task_toggle")]
 
     public function toggleTaskAction(Task $task)
     {
         $task->toggle(!$task->isIsDone());
-
         $this->entityManager->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if($task->isIsDone()){
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+            return $this->redirectToRoute('to-do_list');
+        } else {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+            return $this->redirectToRoute('task_completed');
+        }
 
-        return $this->redirectToRoute('to-do_list');
     }
+
+    ///////////
 
     #[Route("/admin/tasks/{id}/delete", name:"task_anonymous_delete")]
     public function deleteTaskAnonymousAction(Task $task)
