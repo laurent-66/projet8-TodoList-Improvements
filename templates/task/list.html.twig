@@ -4,6 +4,7 @@
 
 {% block body %}
     <div class="row">
+    {% if app.user %}
         <div class="col-sm-12 col-md-6">
             {% if app.user %}
             <a href="{{ path('task_create') }}" class="btn btn-success d-block mb-3">Créer une tâche</a>
@@ -12,8 +13,13 @@
         <div class="col-sm-12 col-md-6">
             <a href="{{ path('task_completed') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches effectuées</a>   
         </div>
+    {% else %}
+        <div class="col-sm-12 col-md-12">
+            <a href="{{ path('task_completed') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches effectuées</a>   
+        </div>
+    {% endif %}    
     </div>
-    <h2 class="text-center">Liste des tâches à faire</h2>
+    <h2 class="text-center mb-3">Liste des tâches à faire</h2>
     <div class="row px-0 mx-0 d-flex justify-content-start">
         {% for task in tasks %}
         <div class="col-sm-12 col-lg-4 col-md-4 px-2">
