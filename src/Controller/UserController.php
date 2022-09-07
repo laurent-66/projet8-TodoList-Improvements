@@ -60,7 +60,7 @@ class UserController extends AbstractController
     }
 
 
-    #[Route("/users/{id}/edit", name:"user_edit")]
+    #[Route("/admin/users/{id}/edit", name:"user_edit")]
     public function editAction($id, Request $request)
     {
 
