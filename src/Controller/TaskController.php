@@ -17,9 +17,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TaskController extends AbstractController
 {
-
-    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository, UserRepository $userRepository, Security $security)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TaskRepository $taskRepository,
+        UserRepository $userRepository,
+        Security $security
+    ) {
         $this->entityManager = $entityManager;
         $this->taskRepository = $taskRepository;
         $this->userRepository = $userRepository;
@@ -35,43 +38,40 @@ class TaskController extends AbstractController
         return $this->render('task/adminTasksAnonymous.html.twig', [
             'tasks' => $tasksPublic
         ]);
-
     }
 
     #[Route('/tasks/to_do', name: 'to-do_list')]
     public function listAction(): Response
     {
-        if($this->getUser()){
+        if ($this->getUser()) {
             $tasks = $this->taskRepository->findByUser($this->getUser());
-            $tasksTodo = FilterStatusTasks::filter($tasks,false);
+            $tasksTodo = FilterStatusTasks::filter($tasks, false);
             return $this->render('task/list.html.twig', [
                 'tasks' => $tasksTodo
             ]);
         } else {
             $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
             $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
-            $tasksPublicTodo = FilterStatusTasks::filter($tasksPublic,false);
+            $tasksPublicTodo = FilterStatusTasks::filter($tasksPublic, false);
             return $this->render('task/list.html.twig', [
                 'tasks' => $tasksPublicTodo
             ]);
         }
-
     }
 
     #[Route('/tasks/completed', name: 'task_completed')]
     public function listTaskCompletedAction(): Response
     {
-        if($this->getUser()){
+        if ($this->getUser()) {
             $tasks = $this->taskRepository->findByUser($this->getUser());
-            $tasksCompleted = FilterStatusTasks::filter($tasks,true);
+            $tasksCompleted = FilterStatusTasks::filter($tasks, true);
             return $this->render('task/listTaskCompleted.html.twig', [
                 'tasks' => $tasksCompleted
             ]);
-
         } else {
             $userAnonymous = $this->userRepository->findOneByUsername('anonymous_user');
             $tasksPublic = $this->taskRepository->findByUser($userAnonymous);
-            $tasksPublicIsDone = FilterStatusTasks::filter($tasksPublic,true);
+            $tasksPublicIsDone = FilterStatusTasks::filter($tasksPublic, true);
             return $this->render('task/listTaskCompleted.html.twig', [
                 'tasks' => $tasksPublicIsDone
             ]);
@@ -87,7 +87,7 @@ class TaskController extends AbstractController
         $task = new Task();
         $form = $this->createForm(TaskType::class);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $dataForm = $form->getData();
             $title = $dataForm->getTitle();
@@ -97,7 +97,7 @@ class TaskController extends AbstractController
             $task->setIsDone(false);
             $task->setCreatedAt(new \DateTime());
 
-            if($currentUser){
+            if ($currentUser) {
                 $task->setUser($currentUser);
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
@@ -105,7 +105,7 @@ class TaskController extends AbstractController
                 $task->setUser($userAnonymous);
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
-            } 
+            }
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
             return $this->redirectToRoute('to-do_list');
         }
@@ -115,7 +115,7 @@ class TaskController extends AbstractController
 
 
     #[Route("/tasks/{id}/edit", name:"task_edit")]
-    public function editAction($id,Task $task, Request $request)
+    public function editAction($id, Task $task, Request $request)
     {
         $task = $this->taskRepository->find($id);
 
@@ -144,11 +144,17 @@ class TaskController extends AbstractController
     {
         $task->toggle(!$task->isIsDone());
         $this->entityManager->flush();
-        if($task->isIsDone()){
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($task->isIsDone()) {
+            $this->addFlash('success', sprintf(
+                'La tâche %s a bien été marquée comme faite.',
+                $task->getTitle()
+            ));
             return $this->redirectToRoute('to-do_list');
         } else {
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+            $this->addFlash('success', sprintf(
+                'La tâche %s a bien été marquée comme non terminée.',
+                $task->getTitle()
+            ));
             return $this->redirectToRoute('task_completed');
         }
     }
@@ -165,12 +171,12 @@ class TaskController extends AbstractController
     #[Route("/tasks/{id}/delete", name:"task_delete")]
     public function deleteTaskToDoAction(Task $task)
     {
-        if(!$task->isIsDone()) {
+        if (!$task->isIsDone()) {
             $this->entityManager->remove($task);
             $this->entityManager->flush();
             $this->addFlash('success', 'La tâche a bien été supprimée.');
             return $this->redirectToRoute('to-do_list');
-        }else{
+        } else {
             $this->entityManager->remove($task);
             $this->entityManager->flush();
             $this->addFlash('success', 'La tâche a bien été supprimée.');

@@ -11,7 +11,7 @@ class SecurityController extends AbstractController
 {
     public function __construct(AuthenticationUtils $authenticationUtils)
     {
-        $this->authenticationUtils  = $authenticationUtils ; 
+        $this->authenticationUtils  = $authenticationUtils ;
     }
 
     #[Route('/login', name: 'app_login')]
@@ -38,6 +38,5 @@ class SecurityController extends AbstractController
     {
 
         // controller can be blank: it will never be called!
-
     }
 }

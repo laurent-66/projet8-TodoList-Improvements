@@ -16,18 +16,17 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
-public function __construct(
-    UserRepository $userRepository,
-    EntityManagerInterface $entityManager, 
-    UserPasswordHasherInterface $passwordHasher,
-    Security $security
-    )
-{
-    $this->userRepository = $userRepository;
-    $this->entityManager = $entityManager;
-    $this->passwordHasher = $passwordHasher;
-    $this->security = $security;
-}
+    public function __construct(
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        Security $security
+    ) {
+        $this->userRepository = $userRepository;
+        $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher;
+        $this->security = $security;
+    }
 
     #[Route('/admin/users', name: 'users_list')]
     public function index(): Response
@@ -44,11 +43,10 @@ public function __construct(
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user = $form->getData();
             $plaintextPassword = $user->getPassword();
             $role = $user->getRoleSelection();
-            $hashedPassword = $this->passwordHasher->hashPassword($user,$plaintextPassword);
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
             $user->setPassword($hashedPassword);
             $user->setRoles([$role]);
             $this->entityManager->persist($user);
@@ -75,7 +73,6 @@ public function __construct(
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $dataForm = $form->getData();
             $role = $dataForm->getRoleSelection();
             $user->setRoles([$role]);
@@ -88,5 +85,4 @@ public function __construct(
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
-
 }

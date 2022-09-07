@@ -18,7 +18,7 @@ class AppFixtures extends Fixture
         $this->userRepository = $userRepository;
     }
 
-    public function load(ObjectManager $manager, ): void
+    public function load(ObjectManager $manager,): void
     {
 
         //anonymous user
@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
             $user = new User();
             $user->setUserName('anonymous_user');
             $user->setEmail('default@email.com');
-            $passwordHasher = $this->hasher->hashPassword($user,'password');
+            $passwordHasher = $this->hasher->hashPassword($user, 'password');
             $user->setPassword($passwordHasher);
             $user->setRoles(['ROLE_USER_ANONYMOUS']);
             $user->setRoleSelection('ROLE_USER_ANONYMOUS');
@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
 
 
         //fixtures Users
-        for($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $faker = Factory::create('fr_FR');
             $user = new User();
             $user->setUserName($faker->name());
@@ -51,7 +51,7 @@ class AppFixtures extends Fixture
 
 
         //fixtures Task not assigned to a user
-        for($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $faker = Factory::create('fr_FR');
             $task = new Task();
             $task->setTitle($faker->sentence());
@@ -65,7 +65,7 @@ class AppFixtures extends Fixture
 
         //fixtures Task assigned to a user id = 2;
 
-        for($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $user = $this->userRepository->find(2);
             $faker = Factory::create('fr_FR');
             $task = new Task();
@@ -78,5 +78,4 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
     }
-
 }

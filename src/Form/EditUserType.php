@@ -22,15 +22,15 @@ class EditUserType extends AbstractType
         $builder
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
-                'required'=>false,
+                'required' => false,
                 // 'attr' => ['class' => 'form-label']
             ])
             ->add('roleSelection', ChoiceType::class, [
                     'choices'  => [
                         'Role utilisateur' => 'ROLE_USER',
                         'Role administrateur' => 'ROLE_ADMIN',
-                    ], 
-            ]);   
+                    ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Task;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,13 +16,12 @@ class TaskType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => "Intitulé de la tâche",
-                'required'=>false,
+                'required' => false,
                 ])
             ->add('content', TextareaType::class, [
-                'label'=> "contenue de la tâche",
-                'required'=>false,
+                'label' => "contenue de la tâche",
+                'required' => false,
             ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void

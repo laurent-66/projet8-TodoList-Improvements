@@ -21,7 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string',length: 25, unique: false, nullable:false)]
+    #[ORM\Column(type: 'string', length: 25, unique: false, nullable:false)]
     #[Assert\NotBlank(message:"Vous devez saisir un nom d'utilisateur.")]
     private ?string $username;
 
@@ -113,13 +113,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function getRoleSelection():string
+    public function getRoleSelection(): string
     {
         return $this->roleSelection;
     }
 
 
-    public function setRoleSelection($roleSelection):void
+    public function setRoleSelection($roleSelection): void
     {
         $this->roleSelection = $roleSelection;
     }
@@ -189,5 +189,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

@@ -22,12 +22,12 @@ class UserType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
-                'required'=>false,
+                'required' => false,
                 // 'attr' => ['class' => 'form-label']
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
-                'required'=>false,
+                'required' => false,
                 // 'attr' => ['class' => 'form-label']
             ])
             ->add('password', RepeatedType::class, [
@@ -47,8 +47,8 @@ class UserType extends AbstractType
                     'choices'  => [
                         'Role utilisateur' => 'ROLE_USER',
                         'Role administrateur' => 'ROLE_ADMIN',
-                    ], 
-                ]);   
+                    ],
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
