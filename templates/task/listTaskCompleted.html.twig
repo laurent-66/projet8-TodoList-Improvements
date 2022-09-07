@@ -4,16 +4,21 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-sm-12 col-md-6">
-            {% if app.user %}      
+        {% if app.user %}    
+            <div class="col-sm-12 col-md-6">
                 <a href="{{ path('task_create') }}" class="btn btn-success d-block mb-3">Créer une tâche</a>
-            {% endif %}  
-        </div>
-        <div class="col-sm-12 col-md-6">
-            <a href="{{ path('to-do_list') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches à faire</a>  
-        </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <a href="{{ path('to-do_list') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches à faire</a>  
+            </div>
+        {% else %}
+            <div class="col-sm-12 col-md-12">
+                <a href="{{ path('to-do_list') }}" class="btn btn-info d-block mb-3">Consulter la liste des tâches à faire</a>  
+            </div>
+        {% endif %} 
     </div>
-    <h2 class="text-center">Liste des tâches effectuées</h2>
+
+    <h2 class="text-center mb-3">Liste des tâches effectuées</h2>
     <div class="row px-0 mx-0">
         {% for task in tasks %}
         <div class="col-sm-4 col-lg-4 col-md-4">
