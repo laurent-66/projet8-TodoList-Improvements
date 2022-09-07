@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\EditUserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,22 +70,20 @@ public function __construct(
         $currentRole = $user->getRoles();
         $user->setRoleSelection($currentRole[0]);
 
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(EditUserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            $plaintextPassword = $user->getPassword();
-            $role = $user->getRoleSelection();
-            $hashedPassword = $this->passwordHasher->hashPassword($user,$plaintextPassword);
-            $user->setPassword($hashedPassword);
+
+            $dataForm = $form->getData();
+            $role = $dataForm->getRoleSelection();
             $user->setRoles([$role]);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('users_list');
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
