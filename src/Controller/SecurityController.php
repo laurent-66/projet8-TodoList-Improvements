@@ -17,7 +17,6 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function loginAction(): Response
     {
-
         $error = $this->authenticationUtils->getLastAuthenticationError();
         $lastUsername = $this->authenticationUtils->getLastUsername();
 
