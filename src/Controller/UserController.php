@@ -35,7 +35,7 @@ class UserController extends AbstractController
             'users' => $this->userRepository->findAll()]);
     }
 
-    #[Route("/users/create", name:"user_create")]
+    #[Route("/admin/users/create", name:"user_create")]
     public function createAction(Request $request)
     {
         $form = $this->createForm(UserType::class);
