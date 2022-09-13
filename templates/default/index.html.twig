@@ -18,11 +18,8 @@
     {% if is_granted('ROLE_ADMIN') %}
     <h3 class= "text-center mt-4">Administrateur</h3>
     <div class="row mx-0">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-12">
             <a href="{{ path('user_create') }}" class="btn btn-success my-2 d-block">Créer un utilisateur</a>
-        </div>
-        <div class="col-sm-12 col-md-6">
-            <a href="{{ path('task_create') }}" class="btn btn-success my-2  d-block">Créer une nouvelle tâche</a>
         </div>
     </div>
     <div class="row mx-0">
