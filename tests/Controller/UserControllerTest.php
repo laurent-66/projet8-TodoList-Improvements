@@ -7,27 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
-    public function testGetCreateUserPage(): void
-    {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/users/create');
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testPostCreateUserPage(): void
+    public function testCreateUserPage(): void
     {
         $client = static::createClient();
         $client->request('GET', '/users/create');
 
         $this->assertSelectorTextContains('button', 'Ajouter');
+        $client->clickLink('Ajouter');
         $this->assertStringContainsString('/users/create', $client->getRequest()->getRequestUri());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-
-        // Validate a successful response and some content
-        // $this->assertResponseIsSuccessful();
 
         $crawler = $client->submitForm(
             'Ajouter',
@@ -39,9 +28,9 @@ class UserControllerTest extends WebTestCase
             ],
                     
         );
-        dd($client->getResponse()->getStatusCode());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $client->followRedirect();  
+        // dd($client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertStringContainsString('/', $client->getRequest()->getRequestUri());  
     }
 
