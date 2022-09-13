@@ -27,7 +27,11 @@
                         <td class="column-username">{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>
+                        {% if user.username == "anonymous_user" %}
+                            <div class="btn-action-anonymous">-</div>
+                        {% else %}
                             <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
+                        {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
