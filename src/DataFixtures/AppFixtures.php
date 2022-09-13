@@ -35,6 +35,19 @@ class AppFixtures extends Fixture
             $manager->flush();
 
 
+        //John Doe user for test e2e 
+            $faker = Factory::create('fr_FR');
+            $user = new User();
+            $user->setUserName('John_Doe');
+            $user->setEmail('john.doe@example.com');
+            $passwordHasher = $this->hasher->hashPassword($user, 'hello');
+            $user->setPassword($passwordHasher);
+            $user->setRoles(['ROLE_ADMIN']);
+            $user->setRoleSelection('ROLE_ADMIN');
+            $manager->persist($user);
+            $manager->flush();
+
+
         //fixtures Users
         for ($i = 0; $i < 5; $i++) {
             $faker = Factory::create('fr_FR');
