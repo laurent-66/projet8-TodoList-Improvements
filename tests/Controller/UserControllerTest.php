@@ -3,55 +3,107 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
-    public function testCreateUserPage(): void
+    public function setUp() : void
+
     {
-        $client = static::createClient();
-        $client->request('GET', '/users/create');
+      $this->client = static::createClient();
+      $this->userRepository = static::getContainer()->get(UserRepository::class);
+      $this->user = $this->userRepository->findOneByEmail('john.doe@example.com');
+      $this->client->loginUser($this->user);
+      $this->urlGenerator = $this->client->getContainer()->get('router.default');
+      $this->client->followRedirects();
+    }
 
-        $this->assertSelectorTextContains('button', 'Ajouter');
-        $client->clickLink('Ajouter');
-        $this->assertStringContainsString('/users/create', $client->getRequest()->getRequestUri());
+    //Prévoir les cas d'erreurs une méthode par cas d'usage dans le formulaire
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $crawler = $client->submitForm(
-            'Ajouter',
-            [
-                'user[username]' => 'Laurent',
-                'user[password][first]' => 'hello',
-                'user[password][second]' => 'hello',
+    public function testUniqueEntityEmail(): void
+    {
+        $crawler = $this->client->request('GET', '/admin/users/create');
+        $buttonCrawlerNode = $crawler->selectButton('Ajouter');
+        $form = $buttonCrawlerNode->form();
+        $crawler = $this->client->submit($form, [
+                'user[username]' => 'John Doe',
+                'user[email]'=>'john.doe@example.com',
+                'user[password][first]' => '',
+                'user[password][second]' => '',
                 'user[roleSelection]' => 'ROLE_ADMIN'
-            ],
-                    
-        );
-        // dd($client->getResponse()->getStatusCode());
-        $client->followRedirect();
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('/', $client->getRequest()->getRequestUri());  
+        ]);
+
+        $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse()->getContent());
     }
 
 
-    //admin access
+    public function testWithMissingRequiredField(): void
+    {
+      $crawler = $this->client->request('GET', '/admin/users/create');
+      $buttonCrawlerNode = $crawler->selectButton('Ajouter');
+      $form = $buttonCrawlerNode->form();
+      $this->client->submit($form, [
+                'user[username]' => '',
+                'user[email]'=>'',
+                'user[password][first]' => '',
+                'user[password][second]' => '',
+                'user[roleSelection]' => 'ROLE_ADMIN'
+      ]);
+      $this->assertStringContainsString("Vous devez saisir un nom d&#039;utilisateur.", $this->client->getResponse());
+      $this->assertStringContainsString("Vous devez saisir une adresse email.", $this->client->getResponse());
+      $this->assertStringContainsString("Vous devez saisir un mot de passe.", $this->client->getResponse());
+    }
 
-    // public function testGetListUsersPage(): void
+    public function testEmail(): void
+    {
+      $crawler = $this->client->request('GET', '/admin/users/create');
+      $buttonCrawlerNode = $crawler->selectButton('Ajouter');
+      $form = $buttonCrawlerNode->form();
+      $this->client->submit($form, [
+                'user[username]' => 'Laurent',
+                'user[email]'=>'laurent.lesage51gmail.com',
+                'user[password][first]' => '',
+                'user[password][second]' => '',
+                'user[roleSelection]' => 'ROLE_ADMIN'
+      ]);
+      $this->assertStringContainsString("Le format de l&#039;adresse n&#039;est pas correcte.", $this->client->getResponse());
+    }
+
+    //validate the same passwords
+    // public function testComparaisonPasswords(): void
     // {
-    //     $client = static::createClient();
-    //     $userRepository = static::getContainer()->get(UserRepository::class);
 
-    //     // retrieve the test user
-    //     $testUser = $userRepository->findOneByEmail('john.doe@example.com');
-
-    //     // simulate $testUser being logged in
-    //     $client->loginUser($testUser);
-
-    //     // test e.g. the profile page
-    //     $client->request('GET', '/admin/users');
-    //     $this->assertResponseIsSuccessful();
-    //     $this->assertSelectorTextContains('h2', 'Liste des utilisateurs');
+      
     // }
+
+
+    public function testFormCreateUserNominal(): void
+    {
+        //navigation on URI
+        $crawler = $this->client->request('GET', '/admin/users/create');
+
+        //verify presence button with text 'Ajouter' in page
+        $this->assertSelectorTextContains('button', 'Ajouter');
+
+        //select the button
+        $buttonCrawlerNode = $crawler->selectButton('Ajouter');
+
+        //retrieve the Form object for the form belonging to this button
+        $form = $buttonCrawlerNode->form();
+
+        //submit the Form object
+        $this->client->submit($form, [
+                'user[username]' => 'Laurent',
+                'user[email]'=>'laurent.lesage51@gmail.com',
+                'user[password][first]' => 'hello',
+                'user[password][second]' => 'hello',
+                'user[roleSelection]' => 'ROLE_ADMIN'
+        ]);
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('div.alert.alert-success','L\'utilisateur a bien été ajouté.');
+
+    }
 
 }
