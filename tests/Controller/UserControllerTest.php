@@ -3,7 +3,6 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
@@ -19,9 +18,12 @@ class UserControllerTest extends WebTestCase
       $this->client->followRedirects();
     }
 
-    //Prévoir les cas d'erreurs une méthode par cas d'usage dans le formulaire
 
-    public function testUniqueEntityEmail(): void
+    //////////////////create user///////////////////////
+
+    //Errors cases in form create user
+
+    public function testUniqueEntityEmailCreateUser(): void
     {
         $crawler = $this->client->request('GET', '/admin/users/create');
         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
@@ -70,30 +72,35 @@ class UserControllerTest extends WebTestCase
       $this->assertStringContainsString("Le format de l&#039;adresse n&#039;est pas correcte.", $this->client->getResponse());
     }
 
-    //validate the same passwords
-    // public function testComparaisonPasswords(): void
-    // {
-
+    public function testComparaisonPasswords(): void
+    {
+      $crawler = $this->client->request('GET', '/admin/users/create');
+      $buttonCrawlerNode = $crawler->selectButton('Ajouter');
+      $form = $buttonCrawlerNode->form();
+      $this->client->submit($form, [
+                'user[username]' => 'Laurent',
+                'user[email]'=>'laurent.lesage51gmail.com',
+                'user[password][first]' => 'hello',
+                'user[password][second]' => 'hello1',
+                'user[roleSelection]' => 'ROLE_ADMIN'
+      ]);
+      $this->assertStringContainsString("Les deux mots de passe doivent correspondre.", $this->client->getResponse());
       
-    // }
+    }
 
-
+    //Nominal case in form create user
     public function testFormCreateUserNominal(): void
     {
-        //navigation on URI
         $crawler = $this->client->request('GET', '/admin/users/create');
 
-        //verify presence button with text 'Ajouter' in page
-        $this->assertSelectorTextContains('button', 'Ajouter');
+        $response = $this->client->getRequest()->getRequestUri();
+        dump($response);
+        exit;
 
-        //select the button
+
         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
-
-        //retrieve the Form object for the form belonging to this button
         $form = $buttonCrawlerNode->form();
-
-        //submit the Form object
-        $this->client->submit($form, [
+        $crawler = $this->client->submit($form, [
                 'user[username]' => 'Laurent',
                 'user[email]'=>'laurent.lesage51@gmail.com',
                 'user[password][first]' => 'hello',
@@ -102,8 +109,55 @@ class UserControllerTest extends WebTestCase
         ]);
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
         $this->assertSelectorTextContains('div.alert.alert-success','L\'utilisateur a bien été ajouté.');
 
     }
+
+    //////////////// Edit user /////////////////////
+
+    //Errors cases in form edit user
+
+    // public function testUniqueEntityEmailEditUser(): void
+    // {
+    //     $crawler = $this->client->request('GET', '/admin/users/{id}/edit');
+        // $response = $this->client->getRequest()->getRequestUri();
+        // dump($response);
+        // exit;
+
+    //     $buttonCrawlerNode = $crawler->selectButton('Modifier');
+    //     $form = $buttonCrawlerNode->form();
+    //     $crawler = $this->client->submit($form, [
+    //             'edit_user[email]'=>'john.doe@example.com',
+    //             'edit_user[roleSelection]' => 'ROLE_ADMIN'
+    //     ]);
+    //     $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse()->getContent());
+    // }
+
+    // public function testMissingRequiredFieldEditUser(): void
+    // {
+      // $crawler = $this->client->request('GET', '/admin/users/{id}/edit');
+      // $buttonCrawlerNode = $crawler->selectButton('Modifier');
+      // $form = $buttonCrawlerNode->form();
+      // $this->client->submit($form, [
+      //           'edit_user[email]'=>'',
+      //           'edit_user[roleSelection]' => 'ROLE_USER'
+      // ]);
+      // $this->assertStringContainsString("Vous devez saisir une adresse email.", $this->client->getResponse()->getContent());
+    // }
+
+
+
+
+///validation button/////
+
+///create user ////
+    //page home
+
+///mange users///
+    //page home
+
+///Edit user///
+    //page admin/users
 
 }

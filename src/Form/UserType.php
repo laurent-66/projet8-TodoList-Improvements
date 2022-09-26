@@ -23,12 +23,10 @@ class UserType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
                 'required' => false,
-                // 'attr' => ['class' => 'form-label']
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'required' => false,
-                // 'attr' => ['class' => 'form-label']
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -36,11 +34,9 @@ class UserType extends AbstractType
                 'required' => false,
                 'first_options'  => [
                     'label' => 'Mot de passe',
-                    // 'attr' => ['class' => 'form-label']
                 ],
                 'second_options' => [
                     'label' => 'Tapez le mot de passe à nouveau',
-                    // 'attr' => ['class' => 'form-label']
                 ],
             ])
             ->add('roleSelection', ChoiceType::class, [
