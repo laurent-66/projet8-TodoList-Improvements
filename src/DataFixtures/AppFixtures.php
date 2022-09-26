@@ -62,6 +62,15 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
+        // fixtures Task example for test e2e assigned to John Doe
+            $faker = Factory::create('fr_FR');
+            $task = new Task();
+            $task->setTitle('Task');
+            $task->setContent('Content');
+            $task->setIsDone(false);
+            $task->setCreatedAt(new \DateTime());
+            $task->setUser($this->userRepository->find(2));
+            $manager->persist($task);
 
         //fixtures Task not assigned to a user
         for ($i = 0; $i < 3; $i++) {
@@ -76,7 +85,10 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
-        //fixtures Task assigned to a user id = 2;
+
+
+
+        //fixtures Task assigned to a user id = 2 (it's John Doe)
 
         for ($i = 0; $i < 3; $i++) {
             $user = $this->userRepository->find(2);

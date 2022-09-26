@@ -23,7 +23,6 @@ class EditUserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'required' => false,
-                // 'attr' => ['class' => 'form-label']
             ])
             ->add('roleSelection', ChoiceType::class, [
                     'choices'  => [
