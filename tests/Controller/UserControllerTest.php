@@ -3,6 +3,8 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
@@ -122,21 +124,27 @@ class UserControllerTest extends WebTestCase
     // {
     //     $crawler = $this->client->request('GET', '/admin/users/{id}/edit');
         // $response = $this->client->getRequest()->getRequestUri();
-        // dump($response);
-        // exit;
+        // $buttonCrawlerNode = $crawler->selectButton('Modifier');
+        // $form = $buttonCrawlerNode->form();
 
-    //     $buttonCrawlerNode = $crawler->selectButton('Modifier');
-    //     $form = $buttonCrawlerNode->form();
-    //     $crawler = $this->client->submit($form, [
-    //             'edit_user[email]'=>'john.doe@example.com',
-    //             'edit_user[roleSelection]' => 'ROLE_ADMIN'
-    //     ]);
-    //     $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse()->getContent());
+        //code v1
+        // $crawler = $this->client->submit($form, [
+        //         'edit_user[email]'=>'john.doe@example.com',
+        //         'edit_user[roleSelection]' => 'ROLE_ADMIN'
+        // ]);
+
+        //code v2
+        // $form['edit_user[email]'] = 'john.doe@example.com';
+        // $form['edit_user[roleSelection]']->select('ROLE_USER');
+        // $this->client->submit($form);
+
+        // $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse()->getContent());
     // }
 
     // public function testMissingRequiredFieldEditUser(): void
     // {
       // $crawler = $this->client->request('GET', '/admin/users/{id}/edit');
+      //$uri = $crawler->getUri();
       // $buttonCrawlerNode = $crawler->selectButton('Modifier');
       // $form = $buttonCrawlerNode->form();
       // $this->client->submit($form, [
@@ -153,11 +161,35 @@ class UserControllerTest extends WebTestCase
 
 ///create user ////
     //page home
+    public function testButtonCreateUser()
+    {
+      $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+      $this->client->clickLink('Créer un utilisateur');
+      $this->assertEquals('/admin/users/create', $this->client->getRequest()->getRequestUri());
+      $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
 
 ///mange users///
     //page home
+    public function testButtonManageUser()
+    {
+      $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+      $this->client->clickLink('Gestion des utilisateurs');
+      $this->assertEquals('/admin/users', $this->client->getRequest()->getRequestUri());
+      $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
 
 ///Edit user///
     //page admin/users
+
+    public function testButtonEditUser()
+    {
+      $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('users_list'));
+      $this->client->clickLink('Edit');
+      $uri = $this->client->getRequest()->getRequestUri();
+      $id = substr(substr($uri, 13),0,-5);
+      $this->assertEquals('/admin/users/'.$id.'/edit', $this->client->getRequest()->getRequestUri());
+      $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
 
 }
