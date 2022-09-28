@@ -94,12 +94,6 @@ class UserControllerTest extends WebTestCase
     public function testFormCreateUserNominal(): void
     {
         $crawler = $this->client->request('GET', '/admin/users/create');
-
-        $response = $this->client->getRequest()->getRequestUri();
-        dump($response);
-        exit;
-
-
         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
         $form = $buttonCrawlerNode->form();
         $crawler = $this->client->submit($form, [
