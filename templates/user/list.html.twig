@@ -30,7 +30,9 @@
                         {% if user.username == "anonymous_user" %}
                             <div class="btn-action-anonymous">-</div>
                         {% else %}
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
+                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm btn_edit">
+                                <img src="{{ asset('img/icons/pen-solid.png') }}" alt="edit_{{user.id}}" height="26px" title="Modifier l'utilisateur"/>
+                            </a>
                         {% endif %}
                         </td>
                     </tr>

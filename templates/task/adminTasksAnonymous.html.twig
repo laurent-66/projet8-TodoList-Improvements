@@ -22,7 +22,9 @@
                         <td>{{ task.title }}</td>
                         <td class="column-content-task">{{ task.content }}</td>
                         <td>
-                            <a href="{{ path('task_anonymous_delete', {'id' : task.id}) }}" class="btn btn-danger btn-sm">supprimer</a>
+                            <a href="{{ path('task_anonymous_delete', {'id' : task.id}) }}" class="btn btn-danger btn-sm btn_delete">
+                                <img src="{{ asset('img/icons/trash-solid.png') }}" alt="trash_{{task.id}}" height="30px" title="Supprimer la tâche"/>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

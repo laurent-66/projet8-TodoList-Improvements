@@ -41,19 +41,15 @@
                         <div class="row">
                             <div class="d-flex justify-content-end flex-wrap mt-3">
                                 {% if app.user %}
-                                <a href="{{ path('task_delete', {'id' : task.id }) }}" class="btn btn-danger btn-sm" >delete</a>
-                                {# <a href="{{ path('task_delete', {'id' : task.id }) }}" class="btn btn-danger btn-sm" >
-                                    <img src="{{ asset('img/icons/trash-solid.png') }}" alt="trash" height="30px" title="Supprimer la tâche"/>
-                                </a> #}
-
-                                <a href="{{path('task_edit', {'id' : task.id })}}" class="btn btn-primary ms-2">pen-solid</a>
-                                {# <a href="{{path('task_edit', {'id' : task.id })}}" class="btn btn-primary ms-2">
-                                    <img src="{{ asset('img/icons/pen-solid.png') }}" alt="edit" height="26px" title="Modifier la tâche"/>
-                                </a> #}
-                                <a href="{{path('task_toggle', {'id' : task.id })}}" class="btn btn-warning btn-sm ms-2">xmark-solid</a>
-                                {# <a href="{{path('task_toggle', {'id' : task.id })}}" class="btn btn-warning btn-sm ms-2">
-                                    <img src="{{ asset('img/icons/xmark-solid.png') }}" alt="trash" height="30px" title="Rendre la tâche comme non effectuée"/>
-                                </a> #}
+                                <a href="{{ path('task_delete', {'id' : task.id }) }}" class="btn btn-danger btn-sm btn_delete" >
+                                    <img src="{{ asset('img/icons/trash-solid.png') }}" alt="trash_{{task.id}}" height="30px" title="Supprimer la tâche"/>
+                                </a>
+                                <a href="{{path('task_edit', {'id' : task.id })}}" class="btn btn-primary ms-2 btn_edit">
+                                    <img src="{{ asset('img/icons/pen-solid.png') }}" alt="edit_{{task.id}}" height="26px" title="Modifier la tâche"/>
+                                </a> 
+                                <a href="{{path('task_toggle', {'id' : task.id })}}" class="btn btn-warning btn-sm ms-2 btn_todo">
+                                    <img src="{{ asset('img/icons/xmark-solid.png') }}" alt="todo_{{task.id}}" height="30px" title="Rendre la tâche comme non effectuée"/>
+                                </a>
                                 {% endif %}  
                             </div>
                         </div>
