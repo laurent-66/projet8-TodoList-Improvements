@@ -2,7 +2,9 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
+use App\Services\IndexArrayUriService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -14,11 +16,18 @@ class TaskControllerTest extends WebTestCase
     {
       $this->client = static::createClient();
       $this->userRepository = static::getContainer()->get(UserRepository::class);
+      $this->taskRepository = static::getContainer()->get(TaskRepository::class);
       $this->user = $this->userRepository->findOneByEmail('john.doe@example.com');
       $this->client->loginUser($this->user);
       $this->urlGenerator = $this->client->getContainer()->get('router.default');
       $this->client->followRedirects();
     }
+
+
+
+
+//////////////////////// validation  forms /////////////////////////////////
+
 
     /////////create task ////////////
 
@@ -95,19 +104,114 @@ class TaskControllerTest extends WebTestCase
     // }
 
 
-///validation button/////
+////////////////////////////////   validation buttons    //////////////////////////////
 
- ///button create task /////
-      //page to do 
-      public function testButtonCreateTaskPageToDo()
+
+//////  page home /    //////////
+
+    ///// button consult task list completed ////////
+
+    public function testBtnConsultTaskListCompleted()
+    {
+      $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+      $this->client->clickLink('Consulter la liste des tâches effectuées');
+      $this->assertEquals('/tasks/completed', $this->client->getRequest()->getRequestUri());
+      $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    ///// button consult task list to do ////////
+
+    public function testBtnConsultTaskListToDo()
+    {
+      $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+      $this->client->clickLink('Consulter la liste des tâches à faire');
+      $this->assertEquals('/tasks/to_do', $this->client->getRequest()->getRequestUri());
+      $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    ///button manage tasks///
+    public function testButtonManageTasks()
+    {
+      $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+      $this->client->clickLink('Gestion des utilisateurs');
+      $this->assertEquals('/admin/users', $this->client->getRequest()->getRequestUri());
+      $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+
+//////  page /task/to_do   //////////
+
+      ///button create task /////
+
+       public function testButtonCreateTaskPageToDo()
+       {
+         $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
+         $this->client->clickLink('Créer une tâche');
+         $this->assertEquals('/tasks/create', $this->client->getRequest()->getRequestUri());
+         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+       }
+ 
+      ///// button consult task list completed ////////
+
+      public function testButtonConsultTaskListCompleted()
       {
         $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
-        $this->client->clickLink('Créer une tâche');
-        $this->assertEquals('/tasks/create', $this->client->getRequest()->getRequestUri());
+        $this->client->clickLink('Consulter la liste des tâches effectuées');
+        $this->assertEquals('/tasks/completed', $this->client->getRequest()->getRequestUri());
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
       }
 
-      //page task completed
+      /////button Task completed ////////////
+
+      public function testButtonTaskCompleted()
+      {
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
+
+        $idTaskTest = 1;
+        $titleTask = $this->taskRepository->find($idTaskTest)->getTitle();
+        $arrayUri = $crawler->filter('.btn_check')->extract(['href']);
+        $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
+
+        $this->client->clickLink('check_'.$idTaskTest);
+        $this->assertEquals('/tasks/'.$idTaskTest.'/toggle', $arrayUri[$indexUri]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertStringContainsString('La tâche '.$titleTask.' a bien été marquée comme faite.', $this->client->getResponse()); 
+      }
+
+
+      ////button edit task ////
+
+      public function testButtonEditTaskPageTaskToDo()
+      {
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
+        $idTaskTest = 1;
+        $arrayUri = $crawler->filter('.btn_edit')->extract(['href']);
+        $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
+
+        $this->client->clickLink('edit_'.$idTaskTest);
+        $this->assertEquals('/tasks/'.$idTaskTest.'/edit', $arrayUri[$indexUri]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+      }
+
+
+      /////button Task deleted /////////
+
+      public function testButtonTaskDeletedPageToDo()
+      {
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
+        $idTaskTest = 7;
+        $arrayUri = $crawler->filter('.btn_delete')->extract(['href']);
+        $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
+
+        $this->client->clickLink('trash_'.$idTaskTest);
+        $this->assertEquals('/tasks/'.$idTaskTest.'/delete', $arrayUri[$indexUri]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertStringContainsString('La tâche a bien été supprimée.', $this->client->getResponse()); 
+      }
+
+////////  page /tasks/completed  /////////
+
+      ///button create task /////
 
       public function testButtonCreateTaskPageTaskCompleted()
       {
@@ -117,93 +221,75 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
       }
 
+      ///// button consult task list to do ////////
 
-/////////button Task To-do ////////////
-      //page task completed
-
-      public function testButtonTaskToDo()
+      public function testButtonConsultTaskListToDo()
       {
-            $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
-            $this->client->clickLink('check_1');
-            $this->assertEquals('/tasks/1/toggle', $this->client->getRequest()->getRequestUri());
-            $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
+        $this->client->clickLink('Consulter la liste des tâches à faire');
+        $this->assertEquals('/tasks/to_do', $this->client->getRequest()->getRequestUri());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
       }
 
-/////////button Task completed ////////////
-      //page to do 
+      ///button Task To-do ////////////
 
-      public function testButtonTaskCompleted()
+      public function testButtonTaskToDoPageTaskCompleted()
       {
-        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
+        $idTaskTest = 1;
+        $titleTask = $this->taskRepository->find($idTaskTest)->getTitle();
+        $arrayUri = $crawler->filter('.btn_todo')->extract(['href']);
+        $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
 
-        //id de la tâche que l'on souhaite tester
-        $idTaskTest = 7;
-
-        //récupération de tout les uri dans le dom
-        $arrayUri = $crawler->filter('.btn_check')->extract(['href']);
-
-        //recherche de l'index du tableau correspondant à l'id de la tâche
-        foreach($arrayUri as $uri) {
-          //récupération du numéro id dans l'uri
-          $int = (int) filter_var($uri, FILTER_SANITIZE_NUMBER_INT);
-          //on vérifie si id à tester existe bien
-          if($idTaskTest === $int){
-            //récupération de l'index de l'uri 
-            $indexUri = array_search($uri, $arrayUri);
-          }
-        }
-        $this->client->clickLink('check_'.$idTaskTest);
+        $this->client->clickLink('todo_'.$idTaskTest);
         $this->assertEquals('/tasks/'.$idTaskTest.'/toggle', $arrayUri[$indexUri]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-      }
+        $this->assertStringContainsString('La tâche '.$titleTask.' a bien été marquée comme non terminée.', $this->client->getResponse()); 
+      }      
 
+      ///button edit Task ////////////
 
-/////button Task deleted /////////
-      //page to do 
-      public function testButtonTaskDeletedPageToDo()
+      public function testButtonEditTaskPageTaskCompleted()
       {
-        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
-        $this->client->clickLink('check-solid');
-        $uri = $this->client->getRequest()->getRequestUri();
-        $id = substr(substr($uri, 7),0,-7);
-        $this->assertEquals('/tasks/'.$id.'/toggle', $this->client->getRequest()->getRequestUri());
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
+        $idTaskTest = 1;
+        $arrayUri = $crawler->filter('.btn_edit')->extract(['href']);
+        $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
+
+        $this->client->clickLink('edit_'.$idTaskTest);
+        $this->assertEquals('/tasks/'.$idTaskTest.'/edit', $arrayUri[$indexUri]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
       }
 
-      //page task completed
+      ///button Task delete ////////////
 
       public function testButtonTaskDeletedPageTaskCompleted()
       {
-        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
-        $this->client->clickLink('check-solid');
-        $uri = $this->client->getRequest()->getRequestUri();
-        $id = substr(substr($uri, 7),0,-7);
-        $this->assertEquals('/tasks/'.$id.'/toggle', $this->client->getRequest()->getRequestUri());
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
+        $idTaskTest = 6;
+        $arrayUri = $crawler->filter('.btn_delete')->extract(['href']);
+        $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
+
+        $this->client->clickLink('trash_'.$idTaskTest);
+        $this->assertEquals('/tasks/'.$idTaskTest.'/delete', $arrayUri[$indexUri]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertStringContainsString('La tâche a bien été supprimée.', $this->client->getResponse()); 
       }
 
-      //page admin/tasks
+
+////////page admin/tasks//////
 
       public function testButtonTaskDeletedPageAdminTasks()
       {
-            $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('tasksUsersAnonymous'));
-            $this->client->clickLink('supprimer');
-            $uri = $this->client->getRequest()->getRequestUri();
-            dd($uri);
-            $id = substr(substr($uri, 12),0,-7);
-            $this->assertEquals('admin/tasks/'.$id.'/delete', $this->client->getRequest()->getRequestUri());
+            $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('tasksUsersAnonymous'));
+            $idTaskTest = 4;
+            $arrayUri = $crawler->filter('.btn_delete')->extract(['href']);
+            $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
+    
+            $this->client->clickLink('trash_'.$idTaskTest);
+            $this->assertEquals('/admin/tasks/'.$idTaskTest.'/delete', $arrayUri[$indexUri]);
             $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+            $this->assertStringContainsString('La tâche a bien été supprimée.', $this->client->getResponse()); 
       }
 
-
-////button link to do list page ////
-      //page home
-      //page task completed
-
-////button link task completed list page ////
-      //page home
-      //page to do 
-
-///button manage tasks///
-      //page home
 }

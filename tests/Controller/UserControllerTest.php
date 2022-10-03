@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
+use App\Services\IndexArrayUriService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -169,13 +170,13 @@ class UserControllerTest extends WebTestCase
     }
 
 
+////////////////////////////////   validation buttons    //////////////////////////////
 
 
+//////  page home /    //////////
 
-///validation button/////
+    ///create user ////
 
-///create user ////
-    //page home
     public function testButtonCreateUser()
     {
       $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
@@ -184,9 +185,8 @@ class UserControllerTest extends WebTestCase
       $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
-///mange users///
-    //page home
-    public function testButtonManageUser()
+    ///button manage users///
+    public function testButtonManageUsers()
     {
       $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
       $this->client->clickLink('Gestion des utilisateurs');
@@ -194,16 +194,20 @@ class UserControllerTest extends WebTestCase
       $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
-///Edit user///
-    //page admin/users
+
+//////  page /admin/users //////////
+
+    ///Edit user ////
 
     public function testButtonEditUser()
     {
       $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('users_list'));
-      $this->client->clickLink('Edit');
-      $uri = $this->client->getRequest()->getRequestUri();
-      $id = substr(substr($uri, 13),0,-5);
-      $this->assertEquals('/admin/users/'.$id.'/edit', $this->client->getRequest()->getRequestUri());
+      $idUserTest = 3;
+      $arrayUri = $crawler->filter('.btn_edit')->extract(['href']);
+      $indexUri = IndexArrayUriService::search($idUserTest, $arrayUri);
+
+      $this->client->clickLink('edit_'.$idUserTest);
+      $this->assertEquals('/admin/users/'.$idUserTest.'/edit', $arrayUri[$indexUri]);
       $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
