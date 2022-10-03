@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity("email", message:"Cet email est déjà utilisé")]
+#[UniqueEntity("email", message:"Cet email est déjà utilisé", groups:['createUser'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,19 +22,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 25, unique: false, nullable:false)]
-    #[Assert\NotBlank(message:"Vous devez saisir un nom d'utilisateur.")]
+    #[Assert\NotBlank(message:"Vous devez saisir un nom d'utilisateur.", groups:['base'])]
     private ?string $username;
 
     #[ORM\Column(type:'string', length: 60, unique: true, nullable:false)]
-    #[Assert\NotBlank(message:"Vous devez saisir une adresse email.")]
-    #[Assert\Email(message:"Le format de l'adresse n'est pas correcte.")]
+    #[Assert\NotBlank(message:"Vous devez saisir une adresse email.", groups:['base'])]
+    #[Assert\Email(message:"Le format de l'adresse n'est pas correcte.", groups:['base'])]
     private ?string $email;
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column(length: 255, nullable: false) ]
-    #[Assert\NotBlank(message:"Vous devez saisir un mot de passe.")]
+    #[Assert\NotBlank(message:"Vous devez saisir un mot de passe.", groups:['base'])]
     private ?string $password;
 
     #[ORM\Column]
@@ -84,7 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 

@@ -6,8 +6,11 @@
 {% block body %}
     <div class="row">
         {{ form_start(form, {'action' : path('user_edit', {'id' : user.id})}) }}
-        {{ form_widget(form) }}
-
+        {{ form_row(form.email) }}
+        {% if error %}
+            <div class="invalid-feedback">{{ messageError }}</div>
+        {% endif %}
+        {{ form_row(form.roleSelection) }}
         <button type="submit" class="btn btn-success pull-right">Modifier</button>
         {{ form_end(form) }}
     </div>
