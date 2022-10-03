@@ -114,39 +114,60 @@ class UserControllerTest extends WebTestCase
 
     //Errors cases in form edit user
 
+
+
+    // Controlleur à rectifier pour message erreur si un mail choisie exitant déjà dans la database !!!!
+
     // public function testUniqueEntityEmailEditUser(): void
     // {
-    //     $crawler = $this->client->request('GET', '/admin/users/{id}/edit');
-        // $response = $this->client->getRequest()->getRequestUri();
-        // $buttonCrawlerNode = $crawler->selectButton('Modifier');
-        // $form = $buttonCrawlerNode->form();
-
-        //code v1
-        // $crawler = $this->client->submit($form, [
-        //         'edit_user[email]'=>'john.doe@example.com',
-        //         'edit_user[roleSelection]' => 'ROLE_ADMIN'
-        // ]);
-
-        //code v2
-        // $form['edit_user[email]'] = 'john.doe@example.com';
-        // $form['edit_user[roleSelection]']->select('ROLE_USER');
-        // $this->client->submit($form);
-
-        // $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse()->getContent());
+    //     $crawler = $this->client->request('GET', '/admin/users/2/edit');
+    //     $buttonCrawlerNode = $crawler->selectButton('Modifier');
+    //     $form = $buttonCrawlerNode->form();
+    //     $crawler = $this->client->submit($form, [
+    //             'edit_user[email]'=>'john.doe@example.com',
+    //             'edit_user[roleSelection]' => 'ROLE_ADMIN'
+    //     ]);
+    //     $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse());
     // }
 
-    // public function testMissingRequiredFieldEditUser(): void
-    // {
-      // $crawler = $this->client->request('GET', '/admin/users/{id}/edit');
-      //$uri = $crawler->getUri();
-      // $buttonCrawlerNode = $crawler->selectButton('Modifier');
-      // $form = $buttonCrawlerNode->form();
-      // $this->client->submit($form, [
-      //           'edit_user[email]'=>'',
-      //           'edit_user[roleSelection]' => 'ROLE_USER'
-      // ]);
-      // $this->assertStringContainsString("Vous devez saisir une adresse email.", $this->client->getResponse()->getContent());
-    // }
+    public function testMissingRequiredFieldEditUser(): void
+    {
+      $crawler = $this->client->request('GET', '/admin/users/2/edit');
+      $buttonCrawlerNode = $crawler->selectButton('Modifier');
+      $form = $buttonCrawlerNode->form();
+      $crawler = $this->client->submit($form, [
+              'edit_user[email]'=>'',
+              'edit_user[roleSelection]' => 'ROLE_ADMIN'
+      ]); 
+      $this->assertStringContainsString("Vous devez saisir une adresse email.", $this->client->getResponse());
+    }
+
+
+    public function testEmailEditUser(): void
+    {
+      $crawler = $this->client->request('GET', '/admin/users/2/edit');
+      $buttonCrawlerNode = $crawler->selectButton('Modifier');
+      $form = $buttonCrawlerNode->form();
+      $crawler = $this->client->submit($form, [
+              'edit_user[email]'=>'john.doeexample.com',
+              'edit_user[roleSelection]' => 'ROLE_ADMIN'
+      ]);
+      $this->assertStringContainsString("Le format de l&#039;adresse n&#039;est pas correcte.", $this->client->getResponse());
+    }
+
+    public function testFormEditUserNominal(): void
+    {
+        $crawler = $this->client->request('GET', '/admin/users/2/edit');
+        $buttonCrawlerNode = $crawler->selectButton('Modifier');
+        $form = $buttonCrawlerNode->form();
+        $crawler = $this->client->submit($form, [
+                'edit_user[email]'=>'john.doe@example.com',
+                'edit_user[roleSelection]' => 'ROLE_ADMIN'
+        ]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString(' L&#039;utilisateur a bien été modifié', $this->client->getResponse()); 
+    }
+
 
 
 

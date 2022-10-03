@@ -73,7 +73,9 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $dataForm = $form->getData();
+            // if($dataform->getEmail() != )
             $role = $dataForm->getRoleSelection();
             $user->setRoles([$role]);
             $this->entityManager->persist($user);
@@ -82,7 +84,11 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('users_list');
         }
+            // } else {
+            //     $messageError = 'L\'adresse mail existe déjà';
+            //     return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user, 'messageError' => $messageError, 'error' => true]);
+            // }
 
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user, 'error' => false]);
     }
 }

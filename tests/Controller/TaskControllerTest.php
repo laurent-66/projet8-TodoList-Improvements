@@ -124,10 +124,8 @@ class TaskControllerTest extends WebTestCase
       public function testButtonTaskToDo()
       {
             $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
-            $this->client->clickLink('xmark-solid');
-            $uri = $this->client->getRequest()->getRequestUri();
-            $id = substr(substr($uri, 7),0,-7);
-            $this->assertEquals('/tasks/'.$id.'/toggle', $this->client->getRequest()->getRequestUri());
+            $this->client->clickLink('check_1');
+            $this->assertEquals('/tasks/1/toggle', $this->client->getRequest()->getRequestUri());
             $this->assertResponseStatusCodeSame(Response::HTTP_OK);
       }
 
@@ -136,11 +134,26 @@ class TaskControllerTest extends WebTestCase
 
       public function testButtonTaskCompleted()
       {
-        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
-        $this->client->clickLink('check-solid');
-        $uri = $this->client->getRequest()->getRequestUri();
-        $id = substr(substr($uri, 7),0,-7);
-        $this->assertEquals('/tasks/'.$id.'/toggle', $this->client->getRequest()->getRequestUri());
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
+
+        //id de la tâche que l'on souhaite tester
+        $idTaskTest = 7;
+
+        //récupération de tout les uri dans le dom
+        $arrayUri = $crawler->filter('.btn_check')->extract(['href']);
+
+        //recherche de l'index du tableau correspondant à l'id de la tâche
+        foreach($arrayUri as $uri) {
+          //récupération du numéro id dans l'uri
+          $int = (int) filter_var($uri, FILTER_SANITIZE_NUMBER_INT);
+          //on vérifie si id à tester existe bien
+          if($idTaskTest === $int){
+            //récupération de l'index de l'uri 
+            $indexUri = array_search($uri, $arrayUri);
+          }
+        }
+        $this->client->clickLink('check_'.$idTaskTest);
+        $this->assertEquals('/tasks/'.$idTaskTest.'/toggle', $arrayUri[$indexUri]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
       }
 
