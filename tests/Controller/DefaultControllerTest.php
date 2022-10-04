@@ -2,17 +2,28 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
+    public function setUp() : void
+
+    {
+        $this->client = static::createClient();
+        $this->userRepository = static::getContainer()->get(UserRepository::class);
+        $this->user = $this->userRepository->findOneByEmail('john.doe@example.com');
+        $this->client->loginUser($this->user);
+        $this->urlGenerator = $this->client->getContainer()->get('router.default');
+        $this->client->followRedirects();
+    }
+
     public function testToAccessPage()
     {
-        $client = static::createClient();
-        $client->request('GET', '/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->client->request('GET', '/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     ///////////// validation buttons /////////////

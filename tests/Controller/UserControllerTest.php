@@ -115,25 +115,21 @@ class UserControllerTest extends WebTestCase
 
     //Errors cases in form edit user
 
-
-
-    // Controlleur à rectifier pour message erreur si un mail choisie exitant déjà dans la database !!!!
-
-    // public function testUniqueEntityEmailEditUser(): void
-    // {
-    //     $crawler = $this->client->request('GET', '/admin/users/2/edit');
-    //     $buttonCrawlerNode = $crawler->selectButton('Modifier');
-    //     $form = $buttonCrawlerNode->form();
-    //     $crawler = $this->client->submit($form, [
-    //             'edit_user[email]'=>'john.doe@example.com',
-    //             'edit_user[roleSelection]' => 'ROLE_ADMIN'
-    //     ]);
-    //     $this->assertStringContainsString("Cet email est déjà utilisé", $this->client->getResponse());
-    // }
+    public function testUniqueEntityEmailEditUser(): void
+    {
+        $crawler = $this->client->request('GET', '/admin/users/3/edit');
+        $buttonCrawlerNode = $crawler->selectButton('Modifier');
+        $form = $buttonCrawlerNode->form();
+        $crawler = $this->client->submit($form, [
+                'edit_user[email]'=>'john.doe@example.com',
+                'edit_user[roleSelection]' => 'ROLE_ADMIN'
+        ]);
+        $this->assertStringContainsString("L'adresse email existe déjà.", $this->client->getResponse());
+    }
 
     public function testMissingRequiredFieldEditUser(): void
     {
-      $crawler = $this->client->request('GET', '/admin/users/2/edit');
+      $crawler = $this->client->request('GET', '/admin/users/3/edit');
       $buttonCrawlerNode = $crawler->selectButton('Modifier');
       $form = $buttonCrawlerNode->form();
       $crawler = $this->client->submit($form, [
@@ -156,6 +152,8 @@ class UserControllerTest extends WebTestCase
       $this->assertStringContainsString("Le format de l&#039;adresse n&#039;est pas correcte.", $this->client->getResponse());
     }
 
+
+    //Nominal case in form create user
     public function testFormEditUserNominal(): void
     {
         $crawler = $this->client->request('GET', '/admin/users/2/edit');

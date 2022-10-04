@@ -9,34 +9,37 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
 {
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+        $this->userRepository = static::getContainer()->get(UserRepository::class);
+        $this->user = $this->userRepository->findOneByEmail('john.doe@example.com');
+        $this->urlGenerator = $this->client->getContainer()->get('router.default');
+        $this->client->followRedirects();
+    }
+
+
     public function testGetLoginPage()
     {
-        // This calls KernelTestCase::bootKernel(), and creates a
-        // "client" that is acting as the browser
-        $client = static::createClient();
-
         // Request a specific page
-        $crawler = $client->request('GET', '/login');
+        $this->client->request('GET', '/login');
 
         // Validate a successful response and some content
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
 
     public function testVisitingWhileLoggedIn()
     {
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
         // retrieve the test user
-        $testUser = $userRepository->findOneByEmail('john.doe@example.com');
+        $testUser = $this->userRepository->findOneByEmail('john.doe@example.com');
 
         // simulate $testUser being logged in
-        $client->loginUser($testUser);
+        $this->client->loginUser($testUser);
 
         //test the home page
-        $client->request('GET', '/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->client->request('GET', '/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     ///////////// validation buttons /////////////
@@ -55,9 +58,10 @@ class SecurityControllerTest extends WebTestCase
 
     public function testbuttonLogout() 
     {
+        $this->client->loginUser($this->user);
         $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
         $this->client->clickLink('Se déconnecter');
-        $this->assertEquals('/logout', $this->client->getRequest()->getRequestUri());
+        $this->assertEquals('/', $this->client->getRequest()->getRequestUri());
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     } 
 
