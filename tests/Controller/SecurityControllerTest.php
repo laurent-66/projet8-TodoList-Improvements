@@ -3,6 +3,8 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
@@ -17,7 +19,7 @@ class SecurityControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/login');
 
         // Validate a successful response and some content
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
 
@@ -34,7 +36,29 @@ class SecurityControllerTest extends WebTestCase
 
         //test the home page
         $client->request('GET', '/');
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
+
+    ///////////// validation buttons /////////////
+
+    ///validation button 'se connecter'
+
+    public function testbuttonLogin() 
+    {
+        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+        $this->client->clickLink('Se connecter');
+        $this->assertEquals('/login', $this->client->getRequest()->getRequestUri());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    } 
+
+    ///validation button 'se déconnecter'
+
+    public function testbuttonLogout() 
+    {
+        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
+        $this->client->clickLink('Se déconnecter');
+        $this->assertEquals('/logout', $this->client->getRequest()->getRequestUri());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    } 
 
 }

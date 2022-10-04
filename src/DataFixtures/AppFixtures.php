@@ -62,18 +62,41 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
-        // fixtures Task example for test e2e assigned to John Doe
+        // fixtures Task todo example for test e2e assigned to John Doe
             $faker = Factory::create('fr_FR');
             $task = new Task();
-            $task->setTitle('Task');
-            $task->setContent('Content');
+            $task->setTitle('Task1');
+            $task->setContent('Content1');
             $task->setIsDone(false);
             $task->setCreatedAt(new \DateTime());
             $task->setUser($this->userRepository->find(2));
             $manager->persist($task);
+            $manager->flush();
+
+        // fixtures Task completed example for test e2e assigned to John Doe
+            $faker = Factory::create('fr_FR');
+            $task = new Task();
+            $task->setTitle('Task2');
+            $task->setContent('Content2');
+            $task->setIsDone(true);
+            $task->setCreatedAt(new \DateTime());
+            $task->setUser($this->userRepository->find(2));
+            $manager->persist($task);
+            $manager->flush();
+
+        // fixtures Task todo example for test e2e assigned to John Doe for test edit button
+            $faker = Factory::create('fr_FR');
+            $task = new Task();
+            $task->setTitle('Task3');
+            $task->setContent('Content3');
+            $task->setIsDone(false);
+            $task->setCreatedAt(new \DateTime());
+            $task->setUser($this->userRepository->find(2));
+            $manager->persist($task);
+            $manager->flush();
 
         //fixtures Task not assigned to a user
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $faker = Factory::create('fr_FR');
             $task = new Task();
             $task->setTitle($faker->sentence());
@@ -84,9 +107,6 @@ class AppFixtures extends Fixture
             $manager->persist($task);
         }
         $manager->flush();
-
-
-
 
         //fixtures Task assigned to a user id = 2 (it's John Doe)
 
