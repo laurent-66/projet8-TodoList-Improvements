@@ -39,10 +39,9 @@ class TaskControllerTest extends WebTestCase
         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
         $form = $buttonCrawlerNode->form();
         $crawler = $this->client->submit($form, [
-            'task[title]' => 'Task',
+            'task[title]' => 'Task1',
             'task[content]'=>'Content'
         ]);
-    
         $this->assertStringContainsString("Ce titre est déjà utilisé", $this->client->getResponse()->getContent());
     }
 
@@ -59,7 +58,7 @@ class TaskControllerTest extends WebTestCase
     }
 
 
-    //Nominal case in form create task
+    ////Nominal case in form create task////
     public function testFormCreateTaskNominal(): void
     {
       $crawler = $this->client->request('GET', '/tasks/create');
@@ -75,33 +74,49 @@ class TaskControllerTest extends WebTestCase
 
     /////////Edit task ////////////
 
+
     //Errors cases in form edit task
 
-    // public function testUniqueEntityTitleEditTask(): void
-    // {
-    //     $crawler = $this->client->request('GET', '/tasks/{id}/edit');
-    //     $buttonCrawlerNode = $crawler->selectButton('Modifier');
-    //     $form = $buttonCrawlerNode->form();
-    //     $crawler = $this->client->submit($form, [
-    //         'task[title]' => 'Task',
-    //         'task[content]'=>'Content'
-    //     ]);
+    public function testUniqueEntityTitleEditTask(): void
+    {
+        $crawler = $this->client->request('GET', '/tasks/7/edit');
+        $buttonCrawlerNode = $crawler->selectButton('Modifier');
+        $form = $buttonCrawlerNode->form();
+        $crawler = $this->client->submit($form, [
+            'task[title]' => 'Task1',
+            'task[content]'=>'Content'
+        ]);
     
-    //     $this->assertStringContainsString("Ce titre est déjà utilisé", $this->client->getResponse()->getContent());
+        $this->assertStringContainsString("Ce titre est déjà utilisé", $this->client->getResponse()->getContent());
         
-    // }
+    }
 
-    // public function testMissingRequiredFieldEditTask(): void
-    // {
-    //   $crawler = $this->client->request('GET', '/tasks/{id}/edit');
-    //   $buttonCrawlerNode = $crawler->selectButton('Modifier');
-    //   $form = $buttonCrawlerNode->form();
-    //   $crawler = $this->client->submit($form, [
-    //             'task[title]' => '',
-    //             'task[content]'=>''
-    //   ]);
-    //   $this->assertStringContainsString("Vous devez saisir un titre", $this->client->getResponse()->getContent());
-    // }
+    public function testMissingRequiredFieldEditTask(): void
+    {
+      $crawler = $this->client->request('GET', '/tasks/7/edit');
+      $buttonCrawlerNode = $crawler->selectButton('Modifier');
+      $form = $buttonCrawlerNode->form();
+      $crawler = $this->client->submit($form, [
+                'task[title]' => '',
+                'task[content]'=>''
+      ]);
+      $this->assertStringContainsString("Vous devez saisir un titre", $this->client->getResponse()->getContent());
+    }
+
+    ////Nominal case in form edit task////
+
+    public function testFormEditTaskNominal(): void
+    {
+      $crawler = $this->client->request('GET', '/tasks/7/edit');
+      $buttonCrawlerNode = $crawler->selectButton('Modifier');
+      $form = $buttonCrawlerNode->form();
+      $crawler = $this->client->submit($form, [
+        'task[title]' => 'Task 7',
+        'task[content]'=>'Content7'
+      ]);
+      $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+      $this->assertSelectorTextContains('div.alert.alert-success',' La tâche a bien été modifiée.'); 
+    }
 
 
 ////////////////////////////////   validation buttons    //////////////////////////////
@@ -114,7 +129,7 @@ class TaskControllerTest extends WebTestCase
     public function testBtnConsultTaskListCompleted()
     {
       $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('homepage'));
-      $this->client->clickLink('Consulter la liste des tâches effectuées');
+      $this->client->clickLink('Consulter la liste des tâches terminées');
       $this->assertEquals('/tasks/completed', $this->client->getRequest()->getRequestUri());
       $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
@@ -184,10 +199,9 @@ class TaskControllerTest extends WebTestCase
       public function testButtonEditTaskPageTaskToDo()
       {
         $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
-        $idTaskTest = 1;
+        $idTaskTest = 3;
         $arrayUri = $crawler->filter('.btn_edit')->extract(['href']);
         $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
-
         $this->client->clickLink('edit_'.$idTaskTest);
         $this->assertEquals('/tasks/'.$idTaskTest.'/edit', $arrayUri[$indexUri]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -199,7 +213,7 @@ class TaskControllerTest extends WebTestCase
       public function testButtonTaskDeletedPageToDo()
       {
         $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('to-do_list'));
-        $idTaskTest = 7;
+        $idTaskTest = 8;
         $arrayUri = $crawler->filter('.btn_delete')->extract(['href']);
         $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
 
@@ -252,7 +266,7 @@ class TaskControllerTest extends WebTestCase
       public function testButtonEditTaskPageTaskCompleted()
       {
         $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
-        $idTaskTest = 1;
+        $idTaskTest = 2;
         $arrayUri = $crawler->filter('.btn_edit')->extract(['href']);
         $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
 
@@ -266,7 +280,7 @@ class TaskControllerTest extends WebTestCase
       public function testButtonTaskDeletedPageTaskCompleted()
       {
         $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
-        $idTaskTest = 6;
+        $idTaskTest = 2;
         $arrayUri = $crawler->filter('.btn_delete')->extract(['href']);
         $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);
 
