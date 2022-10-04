@@ -32,6 +32,11 @@
     border-radius: 5px;
 }
 
+.invalid-message {
+    color:red; 
+    margin:-10px 0px 10px;
+}
+
 
 @media screen and (max-width: 767px) {
 
