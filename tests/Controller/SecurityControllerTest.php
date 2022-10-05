@@ -12,6 +12,8 @@ class SecurityControllerTest extends WebTestCase
     public function setUp() : void
     {
         $this->client = static::createClient();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([AppFixtures::class]);
         $this->userRepository = static::getContainer()->get(UserRepository::class);
         $this->user = $this->userRepository->findOneByEmail('john.doe@example.com');
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
