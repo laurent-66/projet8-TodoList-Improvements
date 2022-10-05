@@ -20,7 +20,6 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager,): void
     {
-
         //anonymous user
 
             $faker = Factory::create('fr_FR');
@@ -47,12 +46,17 @@ class AppFixtures extends Fixture
             $manager->persist($user);
             $manager->flush();
 
-
         //fixtures Users
         for ($i = 0; $i < 5; $i++) {
             $faker = Factory::create('fr_FR');
             $user = new User();
-            $user->setUserName($faker->name());
+            $username = $faker->name();
+            if(strlen($username) < 25 ){ 
+                $username;
+            } else {
+                $username = substr($username,0,24);
+            };
+            $user->setUserName($username);
             $user->setEmail($faker->email());
             $passwordHasher = $this->hasher->hashPassword($user, 'hello');
             $user->setPassword($passwordHasher);
@@ -95,11 +99,23 @@ class AppFixtures extends Fixture
             $manager->persist($task);
             $manager->flush();
 
+        // fixtures Task todo example for test e2e assigned to anonymous user
+            $faker = Factory::create('fr_FR');
+            $task = new Task();
+            $task->setTitle('Task3');
+            $task->setContent('Content3');
+            $task->setIsDone(false);
+            $task->setCreatedAt(new \DateTime());
+            $task->setUser($this->userRepository->find(1));
+            $manager->persist($task);
+            $manager->flush();
+
+
         //fixtures Task not assigned to a user
         for ($i = 0; $i < 2; $i++) {
             $faker = Factory::create('fr_FR');
             $task = new Task();
-            $task->setTitle($faker->sentence());
+            $task->setTitle($faker->sentence(3));
             $task->setContent($faker->paragraph());
             $task->setIsDone(false);
             $task->setCreatedAt($faker->dateTime());
@@ -114,7 +130,7 @@ class AppFixtures extends Fixture
             $user = $this->userRepository->find(2);
             $faker = Factory::create('fr_FR');
             $task = new Task();
-            $task->setTitle($faker->sentence());
+            $task->setTitle($faker->sentence(3));
             $task->setContent($faker->paragraph());
             $task->setIsDone(false);
             $task->setCreatedAt($faker->dateTime());

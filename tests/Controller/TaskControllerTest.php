@@ -2,12 +2,14 @@
 
 namespace App\Tests\Controller;
 
+use App\DataFixtures\AppFixtures;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use App\Services\IndexArrayUriService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -95,7 +97,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testMissingRequiredFieldEditTask(): void
     {
-      $crawler = $this->client->request('GET', '/tasks/7/edit');
+      $crawler = $this->client->request('GET', '/tasks/6/edit');
       $buttonCrawlerNode = $crawler->selectButton('Modifier');
       $form = $buttonCrawlerNode->form();
       $crawler = $this->client->submit($form, [
@@ -252,7 +254,7 @@ class TaskControllerTest extends WebTestCase
       public function testButtonTaskToDoPageTaskCompleted()
       {
         $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_completed'));
-        $idTaskTest = 1;
+        $idTaskTest = 2;
         $titleTask = $this->taskRepository->find($idTaskTest)->getTitle();
         $arrayUri = $crawler->filter('.btn_todo')->extract(['href']);
         $indexUri = IndexArrayUriService::search($idTaskTest, $arrayUri);

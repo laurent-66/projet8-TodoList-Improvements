@@ -30,14 +30,14 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Task $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
+    // public function remove(Task $entity, bool $flush = false): void
+    // {
+    //     $this->getEntityManager()->remove($entity);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+    //     if ($flush) {
+    //         $this->getEntityManager()->flush();
+    //     }
+    // }
 
 //    /**
 //     * @return Task[] Returns an array of Task objects

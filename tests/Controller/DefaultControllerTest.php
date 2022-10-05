@@ -2,10 +2,12 @@
 
 namespace App\Tests\Controller;
 
+use App\DataFixtures\AppFixtures;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 
 class DefaultControllerTest extends WebTestCase
 {
