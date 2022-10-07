@@ -102,8 +102,8 @@ class AppFixtures extends Fixture
         // fixtures Task todo example for test e2e assigned to anonymous user
             $faker = Factory::create('fr_FR');
             $task = new Task();
-            $task->setTitle('Task3');
-            $task->setContent('Content3');
+            $task->setTitle('Task4');
+            $task->setContent('Content4');
             $task->setIsDone(false);
             $task->setCreatedAt(new \DateTime());
             $task->setUser($this->userRepository->find(1));
