@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
             $manager->flush();
 
 
-        //John Doe user for test e2e 
+        //John Doe user for test e2e
             $faker = Factory::create('fr_FR');
             $user = new User();
             $user->setUserName('John_Doe');
@@ -51,10 +51,10 @@ class AppFixtures extends Fixture
             $faker = Factory::create('fr_FR');
             $user = new User();
             $username = $faker->name();
-            if(strlen($username) < 25 ){ 
+            if (strlen($username) < 25) {
                 $username;
             } else {
-                $username = substr($username,0,24);
+                $username = substr($username, 0, 24);
             };
             $user->setUserName($username);
             $user->setEmail($faker->email());

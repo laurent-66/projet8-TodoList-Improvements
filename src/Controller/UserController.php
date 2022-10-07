@@ -77,30 +77,31 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $dataForm = $form->getData();
             $updateEmailForm = $dataForm->getEmail();
-    
+
             //create array with all emails
-            $arrayEmails =[];
-            foreach ($users as $itemUser){
+            $arrayEmails = [];
+            foreach ($users as $itemUser) {
                 $existingEmail = $itemUser->getEmail();
                 array_push($arrayEmails, $existingEmail);
             }
 
             //Vérification si l'émail du formulaire est déjà existant dans le tableau emails existant
-            if(in_array($updateEmailForm,$arrayEmails)){
-                $indexUpdateEmail = array_search($updateEmailForm ,$arrayEmails);
+            if (in_array($updateEmailForm, $arrayEmails)) {
+                $indexUpdateEmail = array_search($updateEmailForm, $arrayEmails);
 
                 //suppresion de l'email formulaire déjà existant dans la liste
                 unset($arrayEmails[$indexUpdateEmail]);
             }
 
             //si l'email du formulaire est identique à l'existant et que celui-ci n'est pas présent dans la liste emails
-            //ou 
-            //si l'email du formulaire n'est pas identique à l'existant et que celui-ci n'est pas présent dans la liste emails
+            //ou
+            //si l'email du formulaire n'est pas identique à l'existant
+            //et que celui-ci n'est pas présent dans la liste emails
 
             if (
                 ($updateEmailForm  === $emailCurrentUser &&
                 in_array($updateEmailForm, $arrayEmails) === false) ||
-                
+
                 ($updateEmailForm !== $emailCurrentUser &&
                 in_array($updateEmailForm, $arrayEmails) === false)
             ) {
@@ -111,22 +112,16 @@ class UserController extends AbstractController
                 $this->entityManager->flush();
                 $this->addFlash('success', "L'utilisateur a bien été modifié");
                 return $this->redirectToRoute('users_list');
-
             } else {
-                $this->addFlash('danger','test');
+                $this->addFlash('danger', 'test');
                 // $messageError = 'L\'adresse email existe déjà';
                 return $this->render('user/edit.html.twig', [
-                        'form' => $form->createView(), 
-                        'user' => $user, 
+                        'form' => $form->createView(),
+                        'user' => $user,
                         'error' => true,]);
             }
+        }
 
-        } 
-        
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user, 'error' => false]);
-
     }
-
-
-
 }
