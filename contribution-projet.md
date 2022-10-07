@@ -2,15 +2,15 @@
 
 ## Procédure pour apporter des modifications au projet
 
-### Prérequis: 
+### Prérequis
 
-* Avoir installé git sur son desktop
-* Avoir créer son compte github
+*  Avoir installé git sur son desktop
+*  Avoir créer son compte github
 
 ### Pour information dans ce tuto :
 
-* Le projet original est laurent-66/projet8-TodoList-Improvements
-* Le projet forker est lesageduweb/projet8-TodoList-Improvements
+*  Le projet original est laurent-66/projet8-TodoList-Improvements
+*  Le projet forker est lesageduweb/projet8-TodoList-Improvements
 
 ### Forker le répertoire
 
@@ -77,13 +77,13 @@ On y écrira le titre et un peu de texte. Ce travail sera préparatoire pour met
 
 Les étapes sont les suivantes:
 
-* Création du fichier  ‘contribution-projet’  à la racine de l’arborescence du projet.
-* indexation des modifications avec la commande : <br>
+*  Création du fichier  ‘contribution-projet’  à la racine de l’arborescence du projet.
+*  Indexation des modifications avec la commande : <br>
 
 ```bash
  git add contribution-projet
 ```
-* Créer un commit avec message: <br>
+*  Créer un commit avec message: <br>
 
 ```bash
 git commit -m “création fichier contribution-projet ”
