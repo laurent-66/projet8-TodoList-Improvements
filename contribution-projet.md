@@ -125,7 +125,7 @@ Pour toutes modifications ou d'ajouts de nouvelles fonctionnalitées , le contri
 *  Identifiez et résoudre les mauvaises pratiques de conception STUPID
 
 
-## 3-Rêgles à respecter pour contribuer au projet
+## 3-Règles à respecter pour contribuer au projet
 
 Le contributeur devra avant de proposer la pull request au projet d'origine, effectuer les opérations suivantes :
 
