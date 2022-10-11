@@ -24,7 +24,7 @@ class UserType extends AbstractType
                 'label' => "Nom d'utilisateur",
                 'required' => false,
             ])
-            ->add('email', EmailType::class, [
+            ->add('email', TextType::class, [
                 'label' => 'Adresse email',
                 'required' => false,
             ])
