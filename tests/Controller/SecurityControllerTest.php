@@ -11,6 +11,12 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 
 class SecurityControllerTest extends WebTestCase
 {
+    private $client;
+    private $urlGenerator;
+    private $databaseTool;
+    private $userRepository;
+    private $user;
+
     public function setUp() : void
     {
         $this->client = static::createClient();

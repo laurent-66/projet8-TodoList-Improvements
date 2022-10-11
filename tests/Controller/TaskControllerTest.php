@@ -13,6 +13,13 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 
 class TaskControllerTest extends WebTestCase
 {
+    private $client;
+    private $urlGenerator;
+    private $databaseTool;
+    private $userRepository;
+    private $taskRepository;
+    private $user;
+
     public function setUp() : void
 
     {
