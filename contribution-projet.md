@@ -1,6 +1,6 @@
 # Document explicatif pour la contribution au projet
 
-## Procédure pour apporter des modifications au projet
+## 1-Procédure pour apporter des modifications au projet
 
 ### Prérequis
 
@@ -115,3 +115,21 @@ La pull request est bien transmise au compte github du répertoire projet d’or
 L’auteur (laurent-66/projet8-TodoList-Improvements) du projet d’origine pourra analyser votre proposition au travers de la pull request que vous lui avait envoyé et va ensuite fusionner toutes vos modifications dans la branche principale de son projet. Vous recevrez un courriel de notification une fois que les changements auront été fusionnés.<br>
 <p align="center"><img src="public\img\contribution-projet\ConfirmMailMergedintoMaster.png"></p>
 <br>
+
+## 2-Processus de qualité à utiliser
+
+Pour toutes modifications ou d'ajouts de nouvelles fonctionnalitées , le contributeur devra :
+
+*  Respecter la syntaxe du code selon les normes PSR1 et PSR12 
+*  Appliquer le principe SOLID, et particulièrement le principe de responsabilité unique sur les classes et fonctions
+*  Identifiez et résoudre les mauvaises pratiques de conception STUPID
+
+
+## 3-Rêgles à respecter pour contribuer au projet
+
+Le contributeur devra avant de proposer la pull request au projet d'origine, effectuer les opérations suivantes :
+
+*  Nommer la branche de la manière suivante fork_projectName_contribution_username 
+*  Effectué une analyse codesniffer respectant les normes PSR1 et PSR12
+*  Résoudre les anomalies avec l'outil phpcbf
+*  Effectués les tests nécessaires (tests unitaires et fonctionnels) et avoir un taux de couverture de test de l'ensemble du code de 70 % au minimum.
